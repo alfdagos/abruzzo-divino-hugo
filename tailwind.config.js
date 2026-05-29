@@ -15,8 +15,8 @@ module.exports = {
     },
     extend: {
       fontFamily: {
-        playfair: ['"Playfair Display"', 'serif'],
-        lato: ['Lato', 'sans-serif'],
+        playfair: ['"Cormorant Garamond"', 'serif'],
+        lato: ['Inter', 'sans-serif'],
       },
       colors: {
         wine: {

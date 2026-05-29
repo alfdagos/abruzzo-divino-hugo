@@ -1,5 +1,5 @@
 /* Tipografia, regole base, utility custom e keyframes.
-   I font Playfair Display + Lato sono caricati via Google Fonts <link>
+   I font Cormorant Garamond + Inter sono caricati via Google Fonts <link>
    nel partial layouts/partials/head.html (preconnect + display=swap). */
 
 @layer base {
