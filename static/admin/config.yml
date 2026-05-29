@@ -5,7 +5,7 @@
 
 backend:
   name: github
-  repo: OWNER/REPOSITORY        # ⚠️ COMPILARE: owner/nome-repo GitHub reale
+  repo: /alfdagos/abruzzo-divino-hugo        # ⚠️ COMPILARE: owner/nome-repo GitHub reale
   branch: main
   # In produzione su GitHub Pages serve l'OAuth. Opzione consigliata:
   # deploy del worker "sveltia-cms-auth" (Cloudflare) e poi:
