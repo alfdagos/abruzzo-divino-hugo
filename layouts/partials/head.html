@@ -1,0 +1,64 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+{{- $siteTitle := site.Title -}}
+{{- $payoff := site.Params.payoff -}}
+{{- $pageTitle := cond .IsHome (printf "%s — %s" $siteTitle $payoff) (printf "%s — %s" .Title $siteTitle) -}}
+{{- $desc := or .Description site.Params.description -}}
+
+<title>{{ $pageTitle }}</title>
+<meta name="description" content="{{ $desc }}">
+<meta name="author" content="{{ $siteTitle }}">
+<link rel="canonical" href="{{ .Permalink }}">
+
+<meta property="og:title" content="{{ $pageTitle }}">
+<meta property="og:description" content="{{ $desc }}">
+<meta property="og:type" content="{{ cond .IsPage "article" "website" }}">
+<meta property="og:url" content="{{ .Permalink }}">
+<meta property="og:locale" content="it_IT">
+<meta property="og:site_name" content="{{ $siteTitle }}">
+
+{{/* OG image (DECISIONS #16): cover del contenuto se presente (leaf bundle),
+     altrimenti fallback brand dal vigneto hero. Generata a 1200x630. */}}
+{{- $ogSrc := partial "func/cover.html" . -}}
+{{- if not $ogSrc }}{{ with resources.Get "images/hero/hero-vineyard.jpg" }}{{ $ogSrc = . }}{{ end }}{{ end -}}
+{{- with $ogSrc }}
+  {{- $og := .Fill "1200x630 webp q82" -}}
+  <meta property="og:image" content="{{ $og.Permalink }}">
+  <meta property="og:image:width" content="{{ $og.Width }}">
+  <meta property="og:image:height" content="{{ $og.Height }}">
+  <meta property="og:image:alt" content="{{ $pageTitle }}">
+  <meta name="twitter:image" content="{{ $og.Permalink }}">
+{{- end }}
+
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="{{ "favicon.ico" | relURL }}">
+
+{{/* Google Fonts: Playfair Display + Lato (preconnect + display=swap). */}}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+
+{{ partial "css.html" . }}
+
+{{/* Google Analytics 4 + Consent Mode v2 (DECISIONS #19).
+     Default = denied: GA4 parte in modalità cookieless finché l'utente non
+     accetta dal banner (assets/js/cookie-consent.js → consent update). */}}
+{{ with site.Params.ga4 }}
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  var __consent = (function(){ try { return localStorage.getItem('cookie_consent'); } catch(e){ return null; } })();
+  gtag('consent', 'default', {
+    'ad_storage': 'denied',
+    'ad_user_data': 'denied',
+    'ad_personalization': 'denied',
+    'analytics_storage': __consent === 'granted' ? 'granted' : 'denied',
+    'wait_for_update': 500
+  });
+  gtag('config', '{{ . }}', { 'anonymize_ip': true });
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id={{ . }}"></script>
+{{ end }}

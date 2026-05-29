@@ -1,0 +1,31 @@
+{{/* Footer — contenuti da hugo.Data.ui (editabili dal CMS).
+     Niente dati personali / contatti (DECISIONS #15). */}}
+{{- $ui := hugo.Data.ui -}}
+{{- $f := $ui.footer -}}
+<footer class="bg-wine text-cream py-16 mt-auto">
+  <div class="container mx-auto px-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mb-12">
+      <div>
+        <div class="mb-6">
+          <span class="font-playfair text-2xl font-bold text-gold">{{ $ui.brand }}</span>
+        </div>
+        <p class="font-playfair italic text-lg text-gold-light mb-4">&ldquo;{{ $f.quote }}&rdquo;</p>
+        <p class="text-cream/80 leading-relaxed">{{ $f.tagline }}</p>
+      </div>
+
+      <div>
+        <h3 class="font-playfair text-xl font-semibold text-gold mb-4">{{ $f.esplora_title }}</h3>
+        <ul class="space-y-2">
+          {{- range $f.links }}
+            <li><a href="{{ .url | relURL }}" class="text-cream/80 hover:text-gold transition-colors">{{ .label }}</a></li>
+          {{- end }}
+        </ul>
+      </div>
+    </div>
+
+    <div class="border-t border-cream/20 pt-8 text-center text-cream/60 text-sm">
+      <p>&copy; {{ now.Year }} {{ $ui.brand }}. {{ $f.copyright_suffix }}</p>
+      <p class="mt-2">{{ $f.disclaimer }}</p>
+    </div>
+  </div>
+</footer>

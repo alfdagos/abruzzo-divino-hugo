@@ -1,0 +1,26 @@
+{{ define "main" }}
+
+{{/* Pagina categoria blog: stesso look della list, con filtro attivo sul termine corrente.
+     Generata staticamente via tassonomia (DECISIONS #11) — niente JS. */}}
+<section class="pt-32 pb-16 bg-gradient-to-b from-wine to-wine-dark text-cream">
+  <div class="container mx-auto px-4 text-center">
+    <h1 class="font-playfair text-5xl md:text-6xl font-bold mb-6 animate-fade-in">{{ .Title }}</h1>
+    <p class="text-xl md:text-2xl text-cream/90 max-w-3xl mx-auto animate-fade-in-up">
+      {{ hugo.Data.ui.labels.blog_categoria_intro }} <strong>{{ .Title }}</strong>
+    </p>
+  </div>
+</section>
+
+{{ partial "blog-filtri.html" .Title }}
+
+<section class="py-16 bg-background">
+  <div class="container mx-auto px-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {{ range .Pages.ByDate.Reverse }}
+        {{ partial "card-blog.html" . }}
+      {{ end }}
+    </div>
+  </div>
+</section>
+
+{{ end }}

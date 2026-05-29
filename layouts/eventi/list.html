@@ -1,0 +1,63 @@
+{{ define "main" }}
+
+{{/* Hero */}}
+<section class="pt-32 pb-16 bg-gradient-to-b from-wine to-wine-dark text-cream">
+  <div class="container mx-auto px-4 text-center">
+    <h1 class="font-playfair text-5xl md:text-6xl font-bold mb-6 animate-fade-in">{{ .Title }}</h1>
+    <p class="text-xl md:text-2xl text-cream/90 max-w-3xl mx-auto animate-fade-in-up">{{ .Description }}</p>
+  </div>
+</section>
+
+{{/* Lista eventi (ordinati per data crescente) */}}
+<section class="py-16 bg-cream">
+  <div class="container mx-auto px-4">
+    <div class="space-y-6 max-w-4xl mx-auto">
+      {{ range sort .Pages "Params.event_date" }}
+        {{- $tipo := .Params.tipo -}}
+        {{- $badge := "bg-wine text-cream" -}}
+        {{- if eq $tipo "Festival" -}}{{ $badge = "bg-gold text-wine" -}}
+        {{- else if eq $tipo "Workshop" -}}{{ $badge = "bg-wine-light text-cream" -}}
+        {{- else if eq $tipo "Visita" -}}{{ $badge = "bg-gold-light text-wine" -}}
+        {{- end -}}
+        <article class="overflow-hidden rounded-lg bg-card shadow-md hover-lift">
+          <div class="p-8">
+            <div class="flex flex-wrap items-start justify-between gap-4 mb-4">
+              <div class="flex-1">
+                <h2 class="font-playfair text-3xl font-bold text-wine mb-2">{{ .Title }}</h2>
+                <span class="inline-block px-3 py-1 rounded-full text-sm font-semibold {{ $badge }}">{{ $tipo }}</span>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+              <div class="flex items-center text-foreground">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-gold flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg>
+                <span class="font-semibold">{{ .Params.data_label }}</span>
+              </div>
+              <div class="flex items-center text-muted-foreground">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-gold flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 7-8 13-8 13s-8-6-8-13a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                <span>{{ .Params.luogo }}</span>
+              </div>
+              <div class="flex items-center text-muted-foreground">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-gold flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                <span>{{ .Params.orario }}</span>
+              </div>
+            </div>
+
+            <div class="text-foreground leading-relaxed prose max-w-none">{{ .Content }}</div>
+          </div>
+        </article>
+      {{ end }}
+    </div>
+  </div>
+</section>
+
+{{/* Banda di chiusura — newsletter form rimossa (DECISIONS #10), tornerà come partial */}}
+{{- $el := hugo.Data.ui.labels.eventi -}}
+<section class="py-16 bg-wine text-cream">
+  <div class="container mx-auto px-4 text-center">
+    <h2 class="font-playfair text-3xl md:text-4xl font-bold mb-4">{{ $el.band_title }}</h2>
+    <p class="text-lg text-cream/90 max-w-2xl mx-auto">{{ $el.band_text }}</p>
+  </div>
+</section>
+
+{{ end }}

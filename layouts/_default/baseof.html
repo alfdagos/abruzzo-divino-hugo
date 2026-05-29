@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="{{ site.Language.Lang | default "it" }}">
+<head>
+  {{ partial "head.html" . }}
+</head>
+<body class="min-h-screen flex flex-col">
+  {{ partial "navbar.html" . }}
+
+  <main class="flex-1">
+    {{ block "main" . }}{{ end }}
+  </main>
+
+  {{ partial "footer.html" . }}
+
+  {{/* Cookie banner GDPR (DECISIONS #19) — logica in assets/js/cookie-consent.js,
+       GA4 in Consent Mode v2 default=denied finché l'utente non accetta. */}}
+  {{ with site.Params.ga4 }}
+  {{- $c := hugo.Data.ui.cookie -}}
+  <div id="cookie-banner" class="cookie-banner fixed bottom-0 inset-x-0 z-[60] p-4"
+       role="dialog" aria-live="polite" aria-label="Consenso cookie">
+    <div class="container mx-auto">
+      <div class="bg-wine text-cream rounded-lg shadow-2xl p-5 md:p-6 flex flex-col md:flex-row md:items-center gap-4">
+        <p class="text-sm text-cream/90 leading-relaxed flex-1">{{ $c.text }}</p>
+        <div class="flex gap-3 flex-shrink-0">
+          <button type="button" data-cookie-reject
+                  class="px-5 py-2 rounded-md border border-cream/40 text-cream hover:bg-cream/10 font-semibold text-sm transition-colors">
+            {{ $c.reject }}
+          </button>
+          <button type="button" data-cookie-accept
+                  class="px-5 py-2 rounded-md bg-gold hover:bg-gold-light text-wine font-semibold text-sm transition-colors">
+            {{ $c.accept }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  {{ end }}
+
+  {{ partial "js.html" . }}
+</body>
+</html>

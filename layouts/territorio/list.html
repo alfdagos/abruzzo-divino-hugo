@@ -1,0 +1,163 @@
+{{ define "main" }}
+
+{{/* Helper immagini: asset globale assets/images/territorio/<file>, processato in webp */}}
+{{- $bottle := resources.Get "images/territorio/wine-bottle.jpg" -}}
+
+{{/* Hero */}}
+<section class="pt-32 pb-16 bg-gradient-to-b from-wine to-wine-dark text-cream">
+  <div class="container mx-auto px-4 text-center">
+    <h1 class="font-playfair text-5xl md:text-6xl font-bold mb-6 animate-fade-in">{{ .Title }}</h1>
+    <p class="text-xl md:text-2xl text-cream/90 max-w-3xl mx-auto animate-fade-in-up">
+      {{ .Description }}
+    </p>
+  </div>
+</section>
+
+{{/* Introduzione */}}
+<section class="py-16 bg-cream">
+  <div class="container mx-auto px-4">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <div data-scroll-fade>
+        <h2 class="font-playfair text-4xl font-bold text-wine mb-6">{{ .Params.intro_title }}</h2>
+        {{ range .Params.intro }}
+          <p class="text-lg text-foreground mb-4 leading-relaxed last:mb-0">{{ . }}</p>
+        {{ end }}
+      </div>
+      <div class="relative" data-scroll-fade>
+        {{- with $bottle }}
+          {{- $img := .Resize "800x webp q82" -}}
+          <img src="{{ $img.RelPermalink }}" alt="Vino abruzzese" loading="lazy"
+               width="{{ $img.Width }}" height="{{ $img.Height }}"
+               class="w-full rounded-lg shadow-2xl">
+        {{- end }}
+      </div>
+    </div>
+  </div>
+</section>
+
+{{/* Le Chiavi del Successo */}}
+<section class="py-16 bg-background">
+  <div class="container mx-auto px-4">
+    <h2 class="font-playfair text-4xl font-bold text-wine text-center mb-12">{{ hugo.Data.ui.labels.territorio.chiavi_title }}</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      {{ range .Params.chiavi }}
+        {{- $cls := printf "h-16 w-16 mx-auto mb-4 text-%s" .color -}}
+        <div class="p-6 text-center bg-card rounded-lg shadow hover-lift">
+          {{- if eq .icon "mountain" -}}
+            <svg xmlns="http://www.w3.org/2000/svg" class="{{ $cls }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 3 4 8 5-5 5 15H2L8 3z"/></svg>
+          {{- else if eq .icon "sunrise" -}}
+            <svg xmlns="http://www.w3.org/2000/svg" class="{{ $cls }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v8"/><path d="m4.93 10.93 1.41 1.41"/><path d="M2 18h2"/><path d="M20 18h2"/><path d="m19.07 10.93-1.41 1.41"/><path d="M22 22H2"/><path d="m8 6 4-4 4 4"/><path d="M16 18a4 4 0 0 0-8 0"/></svg>
+          {{- else if eq .icon "map-pin" -}}
+            <svg xmlns="http://www.w3.org/2000/svg" class="{{ $cls }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 7-8 13-8 13s-8-6-8-13a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+          {{- else if eq .icon "grape" -}}
+            <svg xmlns="http://www.w3.org/2000/svg" class="{{ $cls }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 5V2l-5.89 5.89"/><circle cx="16.6" cy="15.89" r="3"/><circle cx="8.11" cy="7.4" r="3"/><circle cx="12.35" cy="11.65" r="3"/><circle cx="13.91" cy="5.85" r="3"/><circle cx="18.15" cy="10.09" r="3"/><circle cx="6.56" cy="13.2" r="3"/><circle cx="10.8" cy="17.44" r="3"/><circle cx="5" cy="19" r="3"/></svg>
+          {{- end -}}
+          <h3 class="font-playfair text-xl font-bold text-wine mb-3">{{ .title }}</h3>
+          <p class="text-muted-foreground text-sm">{{ .text }}</p>
+        </div>
+      {{ end }}
+    </div>
+  </div>
+</section>
+
+{{/* Le Zone Vinicole d'Eccellenza */}}
+<section class="py-16 bg-cream">
+  <div class="container mx-auto px-4">
+    <h2 class="font-playfair text-4xl font-bold text-wine text-center mb-12">{{ hugo.Data.ui.labels.territorio.zone_title }}</h2>
+    <div class="space-y-8 max-w-4xl mx-auto">
+      {{ range .Params.zone }}
+        <div class="p-8 bg-card rounded-lg shadow hover-lift">
+          <h3 class="font-playfair text-2xl font-bold text-wine mb-3">{{ .title }}</h3>
+          <p class="text-foreground mb-4">{{ .text }}</p>
+          <p class="text-sm text-muted-foreground">{{ .meta }}</p>
+        </div>
+      {{ end }}
+    </div>
+  </div>
+</section>
+
+{{/* Costa dei Trabocchi */}}
+{{ with .Params.costa }}
+  {{- $costaImg := resources.Get (printf "images/territorio/%s" .image) -}}
+  <section class="py-16 bg-background">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div class="order-2 lg:order-1">
+          {{- with $costaImg }}
+            {{- $img := .Resize "900x webp q82" -}}
+            <img src="{{ $img.RelPermalink }}" alt="Costa dei Trabocchi" loading="lazy"
+                 width="{{ $img.Width }}" height="{{ $img.Height }}"
+                 class="w-full rounded-lg shadow-2xl">
+          {{- end }}
+        </div>
+        <div class="order-1 lg:order-2">
+          <div class="flex items-center gap-3 mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-wine" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/></svg>
+            <h2 class="font-playfair text-4xl font-bold text-wine">{{ .title }}</h2>
+          </div>
+          {{ range .paragrafi }}
+            <p class="text-lg text-foreground mb-4 leading-relaxed">{{ . | safeHTML }}</p>
+          {{ end }}
+          <div class="p-6 bg-cream border border-wine/20 rounded-lg mt-2">
+            <h3 class="font-playfair text-xl font-bold text-wine mb-3 flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 21c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1 .6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M19.38 20A11.6 11.6 0 0 0 21 14l-9-4-9 4c0 2.9.94 5.34 2.81 7.76"/><path d="M19 13V7a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v6"/><path d="M12 10v4"/><path d="M12 2v3"/></svg>
+              {{ .box_title }}
+            </h3>
+            <p class="text-sm text-muted-foreground leading-relaxed">{{ .box_text }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{{ end }}
+
+{{/* Gran Sasso */}}
+{{ with .Params.gransasso }}
+  {{- $gsImg := resources.Get (printf "images/territorio/%s" .image) -}}
+  <section class="py-16 bg-cream">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div>
+          <div class="flex items-center gap-3 mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-wine" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 3 4 8 5-5 5 15H2L8 3z"/></svg>
+            <h2 class="font-playfair text-4xl font-bold text-wine">{{ .title }}</h2>
+          </div>
+          {{ range .paragrafi }}
+            <p class="text-lg text-foreground mb-4 leading-relaxed">{{ . | safeHTML }}</p>
+          {{ end }}
+          <div class="p-6 bg-background border border-wine/20 rounded-lg mt-2">
+            <h3 class="font-playfair text-xl font-bold text-wine mb-3">{{ .box_title }}</h3>
+            {{ range .box_paragrafi }}
+              <p class="text-sm text-muted-foreground leading-relaxed mb-3 last:mb-0">{{ . | safeHTML }}</p>
+            {{ end }}
+          </div>
+        </div>
+        <div>
+          {{- with $gsImg }}
+            {{- $img := .Resize "900x webp q82" -}}
+            <img src="{{ $img.RelPermalink }}" alt="Gran Sasso d'Italia" loading="lazy"
+                 width="{{ $img.Width }}" height="{{ $img.Height }}"
+                 class="w-full rounded-lg shadow-2xl">
+          {{- end }}
+        </div>
+      </div>
+    </div>
+  </section>
+{{ end }}
+
+{{/* I Sapori dell'Abruzzo */}}
+<section class="py-16 bg-wine text-cream">
+  <div class="container mx-auto px-4">
+    <h2 class="font-playfair text-4xl font-bold text-center mb-12">{{ hugo.Data.ui.labels.territorio.sapori_title }}</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+      {{ range .Params.sapori }}
+        <div class="p-6 bg-cream/10 border border-cream/20 rounded-lg hover-lift">
+          <h3 class="font-playfair text-xl font-bold text-gold mb-2">{{ .nome }}</h3>
+          <p class="text-cream/80 text-sm">{{ .descrizione }}</p>
+        </div>
+      {{ end }}
+    </div>
+  </div>
+</section>
+
+{{ end }}

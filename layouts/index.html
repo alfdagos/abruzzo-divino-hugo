@@ -1,0 +1,138 @@
+{{ define "main" }}
+
+{{/* ============================================================
+     HERO — parallax + 2 CTA + chevron animato
+     ============================================================ */}}
+{{- $h := .Params.hero -}}
+{{- $hero := resources.Get ($h.image | default "images/hero/hero-vineyard.jpg") -}}
+{{- $heroDesktop := $hero.Resize "1920x webp q82" -}}
+<section class="relative h-screen flex items-center justify-center overflow-hidden">
+  <div
+    class="absolute inset-0 -top-12 parallax-slow"
+    data-parallax-hero
+    style="background-image: url('{{ $heroDesktop.RelPermalink }}'); background-size: cover; background-position: center;"
+  >
+    <div class="absolute inset-0 bg-gradient-to-b from-wine-dark/70 via-wine/50 to-wine-dark/80"></div>
+  </div>
+
+  <div class="relative z-10 text-center px-4 max-w-5xl mx-auto">
+    <h1 class="font-playfair text-5xl md:text-7xl lg:text-8xl font-bold text-cream mb-6 leading-tight animate-fade-in">
+      {{ $h.title_line1 }}
+      <span class="block text-gradient-gold mt-2">{{ $h.title_line2 }}</span>
+    </h1>
+    <p class="font-lato text-xl md:text-2xl text-cream/90 mb-12 max-w-3xl mx-auto leading-relaxed animate-fade-in-up">
+      {{ $h.subtitle }}
+    </p>
+    <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+      <a href="{{ $h.cta_primary_url | relURL }}"
+         class="bg-gold hover:bg-gold-light text-wine font-semibold px-8 py-4 rounded-md text-lg transition-all hover:scale-105 shadow-lg">
+        {{ $h.cta_primary_label }}
+      </a>
+      <a href="{{ $h.cta_secondary_url | relURL }}"
+         class="border-2 border-gold text-gold hover:bg-gold hover:text-wine font-semibold px-8 py-4 rounded-md text-lg transition-all hover:scale-105">
+        {{ $h.cta_secondary_label }}
+      </a>
+    </div>
+  </div>
+
+  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce text-gold">
+    {{ partial "icons/chevron-down.html" . }}
+  </div>
+</section>
+
+{{/* ============================================================
+     CANTINE D'ECCELLENZA — prime 6 by weight
+     ============================================================ */}}
+{{- $sc := .Params.sezione_cantine -}}
+<section class="py-24 bg-cream">
+  <div class="container mx-auto px-4">
+    <div class="text-center mb-16">
+      <h2 data-scroll-fade class="font-playfair text-4xl md:text-5xl font-bold text-wine mb-4">
+        {{ $sc.title }}
+      </h2>
+      <p class="text-lg text-muted-foreground max-w-2xl mx-auto">{{ $sc.subtitle }}</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+      {{ range first 6 (where site.RegularPages "Section" "cantine").ByWeight }}
+        {{ partial "card-cantina.html" . }}
+      {{ end }}
+    </div>
+
+    <div class="text-center">
+      <a href="{{ $sc.cta_url | relURL }}"
+         class="inline-block bg-wine hover:bg-wine-dark text-cream font-semibold px-8 py-4 rounded-md text-lg transition-colors">
+        {{ $sc.cta_label }}
+      </a>
+    </div>
+  </div>
+</section>
+
+{{/* ============================================================
+     VINI ICONICI — primi 6 by weight
+     ============================================================ */}}
+{{- $sv := .Params.sezione_vini -}}
+<section class="py-24 bg-background">
+  <div class="container mx-auto px-4">
+    <div class="text-center mb-16">
+      <h2 data-scroll-fade class="font-playfair text-4xl md:text-5xl font-bold text-wine mb-4">
+        {{ $sv.title }}
+      </h2>
+      <p class="text-lg text-muted-foreground max-w-2xl mx-auto">{{ $sv.subtitle }}</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+      {{ range first 6 (where site.RegularPages "Section" "vini").ByWeight }}
+        {{ partial "card-vino.html" . }}
+      {{ end }}
+    </div>
+
+    <div class="text-center">
+      <a href="{{ $sv.cta_url | relURL }}"
+         class="inline-block bg-gold hover:bg-gold-light text-wine font-semibold px-8 py-4 rounded-md text-lg transition-colors">
+        {{ $sv.cta_label }}
+      </a>
+    </div>
+  </div>
+</section>
+
+{{/* ============================================================
+     TERRITORIO — testo + immagine + CTA
+     ============================================================ */}}
+{{- $st := .Params.sezione_territorio -}}
+{{- $cellar := resources.Get ($st.image | default "images/sections/wine-cellar.jpg") -}}
+{{- $cellarImg := $cellar.Resize "1000x webp q82" -}}
+<section class="py-24 bg-wine text-cream">
+  <div class="container mx-auto px-4">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <div>
+        <h2 data-scroll-fade class="font-playfair text-4xl md:text-5xl font-bold mb-6">
+          {{ $st.title }}
+        </h2>
+        {{ range $st.paragrafi }}
+          <p class="text-lg text-cream/90 mb-6 leading-relaxed last:mb-8">{{ . }}</p>
+        {{ end }}
+        <a href="{{ $st.cta_url | relURL }}"
+           class="inline-block bg-gold hover:bg-gold-light text-wine font-semibold px-8 py-4 rounded-md text-lg transition-colors">
+          {{ $st.cta_label }}
+        </a>
+      </div>
+
+      <div class="relative animate-scale-in">
+        <div class="aspect-[4/3] rounded-lg overflow-hidden shadow-2xl">
+          <img
+            src="{{ $cellarImg.RelPermalink }}"
+            alt="{{ $st.title }}"
+            width="{{ $cellarImg.Width }}"
+            height="{{ $cellarImg.Height }}"
+            loading="lazy"
+            class="w-full h-full object-cover"
+          >
+        </div>
+        <div class="absolute -bottom-6 -left-6 w-64 h-64 bg-gold/20 rounded-full blur-3xl -z-10"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{{ end }}

@@ -1,0 +1,13 @@
+{{- $scripts := slice -}}
+{{- with resources.Get "js/navbar.js" }}{{ $scripts = $scripts | append . }}{{ end -}}
+{{- with resources.Get "js/scroll-fade.js" }}{{ $scripts = $scripts | append . }}{{ end -}}
+{{- with resources.Get "js/parallax-hero.js" }}{{ $scripts = $scripts | append . }}{{ end -}}
+{{- with resources.Get "js/cookie-consent.js" }}{{ $scripts = $scripts | append . }}{{ end -}}
+
+{{- $bundle := $scripts | resources.Concat "js/bundle.js" -}}
+{{- if hugo.IsProduction -}}
+  {{- $bundle = $bundle | minify | fingerprint -}}
+  <script src="{{ $bundle.RelPermalink }}" integrity="{{ $bundle.Data.Integrity }}" crossorigin="anonymous" defer></script>
+{{- else -}}
+  <script src="{{ $bundle.RelPermalink }}" defer></script>
+{{- end -}}

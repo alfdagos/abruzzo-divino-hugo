@@ -1,0 +1,29 @@
+/* Design tokens — HSL CSS variables identiche al sorgente Lovable.
+   Light mode only (DECISIONS #1: dark mode rimosso). */
+
+@layer base {
+  :root {
+    /* Luxury Winery Color Palette */
+    --wine: 345 75% 31%;           /* Bordeaux profondo #8B1538 */
+    --wine-light: 345 65% 45%;     /* Bordeaux chiaro */
+    --wine-dark: 345 85% 20%;      /* Bordeaux scuro */
+
+    --gold: 45 75% 53%;            /* Oro champagne #D4AF37 */
+    --gold-light: 45 85% 70%;      /* Oro chiaro */
+
+    --cream: 60 56% 91%;           /* Beige chiaro #F5F5DC */
+    --cream-dark: 40 30% 85%;      /* Beige scuro */
+
+    --background: 0 0% 100%;
+    --foreground: 345 75% 10%;
+
+    --muted: 60 56% 91%;
+    --muted-foreground: 345 20% 40%;
+
+    --border: 40 30% 85%;
+    --input: 40 30% 85%;
+    --ring: 345 75% 31%;
+
+    --radius: 0.5rem;
+  }
+}

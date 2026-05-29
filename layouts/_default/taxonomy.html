@@ -1,0 +1,13 @@
+{{/* Stub taxonomy list — silenzia il warning "no layout file for taxonomy". */}}
+{{ define "main" }}
+<section class="pt-32 pb-16 bg-cream">
+  <div class="container mx-auto px-4">
+    <h1 class="font-playfair text-4xl font-bold text-wine mb-8 text-center capitalize">{{ .Title }}</h1>
+    <ul class="max-w-2xl mx-auto space-y-3">
+      {{ range .Pages.ByWeight }}
+        <li><a href="{{ .RelPermalink }}" class="text-wine hover:text-gold font-semibold">{{ .Title }}</a></li>
+      {{ end }}
+    </ul>
+  </div>
+</section>
+{{ end }}

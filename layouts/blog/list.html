@@ -1,0 +1,34 @@
+{{ define "main" }}
+
+{{/* Hero */}}
+<section class="pt-32 pb-16 bg-gradient-to-b from-wine to-wine-dark text-cream">
+  <div class="container mx-auto px-4 text-center">
+    <h1 class="font-playfair text-5xl md:text-6xl font-bold mb-6 animate-fade-in">{{ .Title }}</h1>
+    <p class="text-xl md:text-2xl text-cream/90 max-w-3xl mx-auto animate-fade-in-up">{{ .Description }}</p>
+  </div>
+</section>
+
+{{/* Filtri categoria (link statici) */}}
+{{ partial "blog-filtri.html" "" }}
+
+{{/* Griglia articoli */}}
+<section class="py-16 bg-background">
+  <div class="container mx-auto px-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {{ range .Pages.ByDate.Reverse }}
+        {{ partial "card-blog.html" . }}
+      {{ end }}
+    </div>
+  </div>
+</section>
+
+{{/* Banda di chiusura — newsletter form rimossa (DECISIONS #10) */}}
+{{- $bl := hugo.Data.ui.labels.blog -}}
+<section class="py-16 bg-gradient-to-r from-wine to-wine-dark text-cream">
+  <div class="container mx-auto px-4 text-center">
+    <h2 class="font-playfair text-3xl md:text-4xl font-bold mb-4">{{ $bl.band_title }}</h2>
+    <p class="text-lg text-cream/90 max-w-2xl mx-auto">{{ $bl.band_text }}</p>
+  </div>
+</section>
+
+{{ end }}

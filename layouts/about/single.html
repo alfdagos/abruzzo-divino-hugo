@@ -1,0 +1,73 @@
+{{ define "main" }}
+
+{{/* Hero */}}
+<section class="pt-32 pb-16 bg-gradient-to-b from-wine to-wine-dark text-cream">
+  <div class="container mx-auto px-4 text-center">
+    <h1 class="font-playfair text-5xl md:text-6xl font-bold mb-6 animate-fade-in">{{ .Title }}</h1>
+    <p class="text-xl md:text-2xl text-cream/90 max-w-3xl mx-auto animate-fade-in-up">{{ .Params.hero_subtitle }}</p>
+  </div>
+</section>
+
+{{/* Mission + valori */}}
+<section class="py-16 bg-cream">
+  <div class="container mx-auto px-4">
+    <div class="max-w-4xl mx-auto text-center mb-16">
+      <h2 class="font-playfair text-4xl font-bold text-wine mb-6">{{ .Params.mission_title }}</h2>
+      {{ range $i, $p := .Params.mission }}
+        <p class="{{ if eq $i 0 }}text-xl text-foreground{{ else }}text-lg text-muted-foreground{{ end }} leading-relaxed mb-6 last:mb-0">{{ $p | safeHTML }}</p>
+      {{ end }}
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      {{ range .Params.valori }}
+        {{- $cls := printf "h-16 w-16 mx-auto mb-4 text-%s" .color -}}
+        <div class="p-8 text-center bg-card rounded-lg shadow hover-lift">
+          {{- if eq .icon "heart" -}}
+            <svg xmlns="http://www.w3.org/2000/svg" class="{{ $cls }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5l7 7Z"/></svg>
+          {{- else if eq .icon "target" -}}
+            <svg xmlns="http://www.w3.org/2000/svg" class="{{ $cls }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+          {{- else if eq .icon "award" -}}
+            <svg xmlns="http://www.w3.org/2000/svg" class="{{ $cls }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526"/><circle cx="12" cy="8" r="6"/></svg>
+          {{- else if eq .icon "users" -}}
+            <svg xmlns="http://www.w3.org/2000/svg" class="{{ $cls }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          {{- end -}}
+          <h3 class="font-playfair text-xl font-bold text-wine mb-3">{{ .title }}</h3>
+          <p class="text-muted-foreground">{{ .text }}</p>
+        </div>
+      {{ end }}
+    </div>
+  </div>
+</section>
+
+{{/* Visione */}}
+<section class="py-16 bg-background">
+  <div class="container mx-auto px-4">
+    <div class="max-w-4xl mx-auto">
+      <h2 class="font-playfair text-4xl font-bold text-wine text-center mb-12">{{ .Params.visione_title }}</h2>
+      <div class="space-y-8">
+        {{ range .Params.visione }}
+          <div class="p-8 bg-card rounded-lg shadow hover-lift">
+            <h3 class="font-playfair text-2xl font-bold text-wine mb-4">{{ .title }}</h3>
+            {{ range $i, $p := .paragrafi }}
+              <p class="{{ if eq $i 0 }}text-foreground{{ else }}text-muted-foreground{{ end }} leading-relaxed mb-4 last:mb-0">{{ $p }}</p>
+            {{ end }}
+          </div>
+        {{ end }}
+      </div>
+    </div>
+  </div>
+</section>
+
+{{/* Quote */}}
+<section class="py-16 bg-wine text-cream">
+  <div class="container mx-auto px-4">
+    <div class="max-w-3xl mx-auto text-center">
+      <blockquote class="font-playfair text-3xl md:text-4xl italic font-light mb-8 leading-relaxed">
+        &ldquo;{{ .Params.quote }}&rdquo;
+      </blockquote>
+      <p class="text-gold-light text-xl">&mdash; {{ .Params.quote_attr }}</p>
+    </div>
+  </div>
+</section>
+
+{{ end }}

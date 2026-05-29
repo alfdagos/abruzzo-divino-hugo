@@ -1,0 +1,546 @@
+# =============================================================================
+# Sveltia CMS — configurazione Abruzzo diVino
+# Schema compatibile Decap CMS. Copre tutte le sezioni del sito.
+# =============================================================================
+
+backend:
+  name: github
+  repo: OWNER/REPOSITORY        # ⚠️ COMPILARE: owner/nome-repo GitHub reale
+  branch: main
+  # In produzione su GitHub Pages serve l'OAuth. Opzione consigliata:
+  # deploy del worker "sveltia-cms-auth" (Cloudflare) e poi:
+  #   base_url: https://<tuo-worker>.workers.dev
+
+# Editing in locale (scelta corrente): avvia il proxy e poi apri /admin/.
+#   npx @sveltia/cms-proxy-server     (oppure: npx decap-server)
+#   hugo server
+# Quando l'auth di produzione è pronta, si può rimuovere/disattivare local_backend.
+local_backend: true
+
+# Commit diretti sul branch (niente editorial workflow / PR).
+# publish_mode: simple   # default
+
+site_url: https://abruzzodivino.it
+display_url: https://abruzzodivino.it
+logo_url: https://abruzzodivino.it/favicon.ico
+locale: it
+
+# Media di default (per contenuti senza cartella propria, es. eventi).
+media_folder: static/images/uploads
+public_folder: /images/uploads
+
+collections:
+  # ---------------------------------------------------------------------------
+  # HOMEPAGE  (content/_index.md — hero + sezioni)
+  # ---------------------------------------------------------------------------
+  - name: homepage
+    label: Homepage
+    description: "Contenuti della pagina iniziale."
+    files:
+      - name: home
+        label: Homepage
+        file: content/_index.md
+        fields:
+          - { label: "Titolo (interno)", name: title, widget: string }
+          - label: Hero
+            name: hero
+            widget: object
+            fields:
+              - { label: "Titolo riga 1", name: title_line1, widget: string }
+              - { label: "Titolo riga 2 (in oro)", name: title_line2, widget: string }
+              - { label: Sottotitolo, name: subtitle, widget: text }
+              - { label: "Immagine di sfondo", name: image, widget: string, hint: "File in assets/, es. images/hero/hero-vineyard.jpg" }
+              - { label: "CTA primaria — etichetta", name: cta_primary_label, widget: string }
+              - { label: "CTA primaria — URL", name: cta_primary_url, widget: string }
+              - { label: "CTA secondaria — etichetta", name: cta_secondary_label, widget: string }
+              - { label: "CTA secondaria — URL", name: cta_secondary_url, widget: string }
+          - label: "Sezione Cantine"
+            name: sezione_cantine
+            widget: object
+            fields:
+              - { label: Titolo, name: title, widget: string }
+              - { label: Sottotitolo, name: subtitle, widget: text }
+              - { label: "CTA — etichetta", name: cta_label, widget: string }
+              - { label: "CTA — URL", name: cta_url, widget: string }
+          - label: "Sezione Vini"
+            name: sezione_vini
+            widget: object
+            fields:
+              - { label: Titolo, name: title, widget: string }
+              - { label: Sottotitolo, name: subtitle, widget: text }
+              - { label: "CTA — etichetta", name: cta_label, widget: string }
+              - { label: "CTA — URL", name: cta_url, widget: string }
+          - label: "Sezione Territorio"
+            name: sezione_territorio
+            widget: object
+            fields:
+              - { label: Titolo, name: title, widget: string }
+              - label: Paragrafi
+                name: paragrafi
+                widget: list
+                field: { label: Paragrafo, name: paragrafo, widget: text }
+              - { label: "Immagine", name: image, widget: string, hint: "File in assets/, es. images/sections/wine-cellar.jpg" }
+              - { label: "CTA — etichetta", name: cta_label, widget: string }
+              - { label: "CTA — URL", name: cta_url, widget: string }
+
+  # ---------------------------------------------------------------------------
+  # CANTINE  (leaf bundle: content/cantine/<slug>/index.md + immagine)
+  # ---------------------------------------------------------------------------
+  - name: cantine
+    label: Cantine
+    label_singular: Cantina
+    description: "Schede delle cantine d'eccellenza."
+    folder: content/cantine
+    path: "{{slug}}/index"
+    media_folder: ""
+    public_folder: ""
+    create: true
+    slug: "{{slug}}"
+    extension: md
+    format: yaml-frontmatter
+    identifier_field: title
+    summary: "{{title}}"
+    sortable_fields: [title, fondazione, weight]
+    fields:
+      - { label: Nome, name: title, widget: string }
+      - { label: Data, name: date, widget: datetime, format: "YYYY-MM-DD", time_format: false, date_format: "DD/MM/YYYY", picker_utc: true }
+      - { label: Bozza, name: draft, widget: boolean, default: false, required: false }
+      - { label: "Ordine (weight)", name: weight, widget: number, value_type: int, required: false, hint: "Numero più basso = mostrato prima" }
+      - { label: Copertina, name: image, widget: image, required: false, hint: "Salvata nella cartella della cantina; sostituisce cover.jpg" }
+      - { label: "Descrizione breve", name: descrizione, widget: text }
+      - { label: Località, name: localita, widget: string, hint: "Comune, es. Popoli" }
+      - { label: Province, name: province, widget: select, multiple: true, options: [CH, PE, AQ, TE] }
+      - { label: "Anno di fondazione", name: fondazione, widget: number, value_type: int }
+      - { label: Ettari, name: ettari, widget: number, value_type: int }
+      - { label: Produzione, name: produzione, widget: string, hint: "Es. 180.000 bottiglie/anno" }
+      - { label: Filosofia, name: filosofia, widget: text }
+      - label: "Vini principali"
+        name: vini_principali
+        widget: list
+        field: { label: Vino, name: vino, widget: string }
+      - { label: "La Storia (corpo)", name: body, widget: markdown }
+
+  # ---------------------------------------------------------------------------
+  # VINI  (leaf bundle: content/vini/<slug>/index.md + immagine bottiglia)
+  # ---------------------------------------------------------------------------
+  - name: vini
+    label: Vini
+    label_singular: Vino
+    description: "Schede dei vini iconici."
+    folder: content/vini
+    path: "{{slug}}/index"
+    media_folder: ""
+    public_folder: ""
+    create: true
+    slug: "{{slug}}"
+    extension: md
+    format: yaml-frontmatter
+    identifier_field: title
+    summary: "{{title}}"
+    sortable_fields: [title, date, weight]
+    fields:
+      - { label: Nome, name: title, widget: string }
+      - { label: Data, name: date, widget: datetime, format: "YYYY-MM-DD", time_format: false, date_format: "DD/MM/YYYY", picker_utc: true }
+      - { label: Bozza, name: draft, widget: boolean, default: false, required: false }
+      - { label: "Ordine (weight)", name: weight, widget: number, value_type: int, required: false }
+      - { label: "Immagine bottiglia", name: image, widget: image, required: false }
+      - { label: "Cantina (nome visualizzato)", name: cantina, widget: string }
+      - label: "Cantina (riferimento)"
+        name: cantina_slug
+        widget: relation
+        collection: cantine
+        value_field: "{{slug}}"
+        search_fields: [title]
+        display_fields: [title]
+        hint: "Collega alla scheda cantina per i link incrociati"
+      - { label: Tipologia, name: tipologie, widget: select, multiple: true, options: [Rosso, Bianco, Rosato, Passito, Spumante] }
+      - label: Vitigni
+        name: vitigni
+        widget: list
+        field: { label: Vitigno, name: vitigno, widget: string }
+        hint: "Es. Montepulciano, Trebbiano, Pecorino…"
+      - { label: "Vitigno (etichetta estesa)", name: vitigno_label, widget: string, required: false, hint: "Es. Montepulciano d'Abruzzo 100%" }
+      - { label: Annata, name: annata, widget: string, required: false }
+      - { label: "Temperatura di servizio", name: temperatura, widget: string, required: false, hint: "Es. 18-20°C" }
+      - label: Abbinamenti
+        name: abbinamenti
+        widget: list
+        field: { label: Abbinamento, name: abbinamento, widget: string }
+      - label: "Note di degustazione"
+        name: note_degustazione
+        widget: object
+        required: false
+        fields:
+          - { label: Vista, name: vista, widget: text }
+          - { label: Olfatto, name: olfatto, widget: text }
+          - { label: Gusto, name: gusto, widget: text }
+      - label: Tag
+        name: tags
+        widget: list
+        required: false
+        field: { label: Tag, name: tag, widget: string }
+      - { label: "Descrizione (corpo)", name: body, widget: markdown }
+
+  # ---------------------------------------------------------------------------
+  # BLOG  (leaf bundle: content/blog/<slug>/index.md + cover)
+  # ---------------------------------------------------------------------------
+  - name: blog
+    label: Blog
+    label_singular: Articolo
+    description: "Articoli del blog."
+    folder: content/blog
+    path: "{{slug}}/index"
+    media_folder: ""
+    public_folder: ""
+    create: true
+    slug: "{{slug}}"
+    extension: md
+    format: yaml-frontmatter
+    identifier_field: title
+    summary: "{{title}} — {{commit_date}}"
+    sortable_fields: [date, title]
+    fields:
+      - { label: Titolo, name: title, widget: string }
+      - { label: Data, name: date, widget: datetime, format: "YYYY-MM-DD", time_format: false, date_format: "DD/MM/YYYY", picker_utc: true }
+      - { label: Autore, name: author, widget: string, default: "Redazione Abruzzo diVino" }
+      - { label: Copertina, name: image, widget: image, required: false }
+      - { label: Categoria, name: categories, widget: select, multiple: true, options: [Territorio, Degustazione, Cultura], hint: "Determina la pagina /blog/categorie/…" }
+      - label: Tag
+        name: tags
+        widget: list
+        required: false
+        field: { label: Tag, name: tag, widget: string }
+      - { label: "Estratto (summary)", name: summary, widget: text, hint: "Lead mostrato in lista e in cima all'articolo" }
+      - { label: Contenuto, name: body, widget: markdown }
+
+  # ---------------------------------------------------------------------------
+  # EVENTI  (pagina singola: content/eventi/<slug>.md, niente immagine)
+  # ---------------------------------------------------------------------------
+  - name: eventi
+    label: Eventi
+    label_singular: Evento
+    description: "Eventi e degustazioni."
+    folder: content/eventi
+    create: true
+    slug: "{{slug}}"
+    extension: md
+    format: yaml-frontmatter
+    identifier_field: title
+    summary: "{{title}} — {{data_label}}"
+    sortable_fields: [event_date, title]
+    fields:
+      - { label: Titolo, name: title, widget: string }
+      - { label: "Data di pubblicazione", name: date, widget: datetime, format: "YYYY-MM-DD", time_format: false, date_format: "DD/MM/YYYY", picker_utc: true, hint: "Tienila nel passato: Hugo non pubblica contenuti con data futura" }
+      - { label: "Data evento", name: event_date, widget: datetime, format: "YYYY-MM-DD", time_format: false, date_format: "DD/MM/YYYY", picker_utc: true, hint: "Usata per l'ordinamento cronologico" }
+      - { label: "Data (etichetta visualizzata)", name: data_label, widget: string, hint: "Es. 20-22 Dicembre 2025" }
+      - { label: Luogo, name: luogo, widget: string }
+      - { label: Orario, name: orario, widget: string, hint: "Es. 18:00 - 21:00" }
+      - { label: Tipo, name: tipo, widget: select, options: [Degustazione, Festival, Workshop, Visita] }
+      - { label: Descrizione, name: body, widget: markdown }
+
+  # ---------------------------------------------------------------------------
+  # SAPORI  (leaf bundle: content/sapori/<slug>/index.md + cover) — sezione AI
+  # ---------------------------------------------------------------------------
+  - name: sapori
+    label: Sapori
+    label_singular: Sapore
+    description: "Approfondimenti sui sapori della tradizione abruzzese."
+    folder: content/sapori
+    path: "{{slug}}/index"
+    media_folder: ""
+    public_folder: ""
+    create: true
+    slug: "{{slug}}"
+    extension: md
+    format: yaml-frontmatter
+    identifier_field: title
+    summary: "{{title}}"
+    sortable_fields: [date, title]
+    fields:
+      - { label: Titolo, name: title, widget: string }
+      - { label: Data, name: date, widget: datetime, format: "YYYY-MM-DD", time_format: false, date_format: "DD/MM/YYYY", picker_utc: true }
+      - { label: Copertina, name: image, widget: image, required: false }
+      - { label: "Estratto (summary)", name: summary, widget: text, required: false }
+      - label: Tag
+        name: tags
+        widget: list
+        required: false
+        field: { label: Tag, name: tag, widget: string }
+      - { label: Contenuto, name: body, widget: markdown }
+
+  # ---------------------------------------------------------------------------
+  # TERRITORIO  (pagina bespoke: content/territorio/_index.md)
+  # ---------------------------------------------------------------------------
+  - name: territorio
+    label: "Territorio (pagina)"
+    description: "La pagina Territorio e Sapori (contenuto strutturato)."
+    files:
+      - name: territorio
+        label: "Pagina Territorio"
+        file: content/territorio/_index.md
+        fields:
+          - { label: Titolo, name: title, widget: string }
+          - { label: Sottotitolo (hero), name: description, widget: text }
+          - { label: "Titolo introduzione", name: intro_title, widget: string }
+          - label: "Introduzione (paragrafi)"
+            name: intro
+            widget: list
+            field: { label: Paragrafo, name: paragrafo, widget: text }
+          - label: "Le Chiavi del Successo"
+            name: chiavi
+            widget: list
+            fields:
+              - { label: Icona, name: icon, widget: select, options: [mountain, sunrise, map-pin, grape] }
+              - { label: Colore, name: color, widget: select, options: [wine, gold] }
+              - { label: Titolo, name: title, widget: string }
+              - { label: Testo, name: text, widget: text }
+          - label: "Zone Vinicole"
+            name: zone
+            widget: list
+            fields:
+              - { label: Titolo, name: title, widget: string }
+              - { label: Testo, name: text, widget: text }
+              - { label: "Meta (comuni/caratteristiche)", name: meta, widget: string }
+          - label: "Costa dei Trabocchi"
+            name: costa
+            widget: object
+            fields:
+              - { label: Titolo, name: title, widget: string }
+              - { label: "Immagine (file in assets/images/territorio/)", name: image, widget: string, hint: "Solo nome file, es. costa-trabocchi.jpg" }
+              - label: Paragrafi
+                name: paragrafi
+                widget: list
+                field: { label: Paragrafo, name: paragrafo, widget: text }
+              - { label: "Box — titolo", name: box_title, widget: string }
+              - { label: "Box — testo", name: box_text, widget: text }
+          - label: "Gran Sasso"
+            name: gransasso
+            widget: object
+            fields:
+              - { label: Titolo, name: title, widget: string }
+              - { label: "Immagine (file in assets/images/territorio/)", name: image, widget: string, hint: "Solo nome file, es. gran-sasso.jpg" }
+              - label: Paragrafi
+                name: paragrafi
+                widget: list
+                field: { label: Paragrafo, name: paragrafo, widget: text }
+              - { label: "Box — titolo", name: box_title, widget: string }
+              - label: "Box — paragrafi"
+                name: box_paragrafi
+                widget: list
+                field: { label: Paragrafo, name: paragrafo, widget: text }
+          - label: "I Sapori dell'Abruzzo"
+            name: sapori
+            widget: list
+            fields:
+              - { label: Nome, name: nome, widget: string }
+              - { label: Descrizione, name: descrizione, widget: text }
+
+  # ---------------------------------------------------------------------------
+  # CHI SIAMO  (pagina bespoke: content/about.md)
+  # ---------------------------------------------------------------------------
+  - name: about
+    label: "Chi Siamo (pagina)"
+    description: "La pagina About (contenuto strutturato)."
+    files:
+      - name: about
+        label: "Pagina Chi Siamo"
+        file: content/about.md
+        fields:
+          - { label: Titolo, name: title, widget: string }
+          - { label: "Descrizione (meta)", name: description, widget: text }
+          - { label: Tipo, name: type, widget: hidden, default: about }
+          - { label: Sottotitolo (hero), name: hero_subtitle, widget: string }
+          - { label: "Titolo Mission", name: mission_title, widget: string }
+          - label: "Mission (paragrafi)"
+            name: mission
+            widget: list
+            field: { label: Paragrafo, name: paragrafo, widget: text }
+          - label: Valori
+            name: valori
+            widget: list
+            fields:
+              - { label: Icona, name: icon, widget: select, options: [heart, target, award, users] }
+              - { label: Colore, name: color, widget: select, options: [wine, gold] }
+              - { label: Titolo, name: title, widget: string }
+              - { label: Testo, name: text, widget: text }
+          - { label: "Titolo Visione", name: visione_title, widget: string }
+          - label: Visione
+            name: visione
+            widget: list
+            fields:
+              - { label: Titolo, name: title, widget: string }
+              - label: Paragrafi
+                name: paragrafi
+                widget: list
+                field: { label: Paragrafo, name: paragrafo, widget: text }
+          - { label: Citazione, name: quote, widget: text }
+          - { label: "Citazione — attribuzione", name: quote_attr, widget: string }
+
+  # ---------------------------------------------------------------------------
+  # INTRO SEZIONI  (titoli/sottotitoli hero delle pagine elenco)
+  # ---------------------------------------------------------------------------
+  - name: sezioni
+    label: "Intro sezioni"
+    description: "Titolo e sottotitolo (hero) delle pagine elenco."
+    files:
+      - name: cantine_index
+        label: "Cantine — intro"
+        file: content/cantine/_index.md
+        fields:
+          - { label: Titolo, name: title, widget: string }
+          - { label: Sottotitolo, name: description, widget: text }
+      - name: vini_index
+        label: "Vini — intro"
+        file: content/vini/_index.md
+        fields:
+          - { label: Titolo, name: title, widget: string }
+          - { label: Sottotitolo, name: description, widget: text }
+      - name: blog_index
+        label: "Blog — intro"
+        file: content/blog/_index.md
+        fields:
+          - { label: Titolo, name: title, widget: string }
+          - { label: Sottotitolo, name: description, widget: text }
+      - name: eventi_index
+        label: "Eventi — intro"
+        file: content/eventi/_index.md
+        fields:
+          - { label: Titolo, name: title, widget: string }
+          - { label: Sottotitolo, name: description, widget: text }
+      - name: sapori_index
+        label: "Sapori — intro"
+        file: content/sapori/_index.md
+        fields:
+          - { label: Titolo, name: title, widget: string }
+          - { label: Sottotitolo, name: description, widget: text }
+
+  # ---------------------------------------------------------------------------
+  # IMPOSTAZIONI SITO  (data/ui.yml — menu, footer, cookie, 404)
+  # ---------------------------------------------------------------------------
+  - name: impostazioni
+    label: "Impostazioni sito"
+    description: "Menu di navigazione, footer, banner cookie e pagina 404."
+    files:
+      - name: ui
+        label: "Interfaccia (UI)"
+        file: data/ui.yml
+        format: yaml
+        fields:
+          - { label: "Nome brand", name: brand, widget: string }
+          - label: "Menu di navigazione"
+            name: menu
+            widget: list
+            label_singular: "Voce"
+            fields:
+              - { label: Etichetta, name: label, widget: string }
+              - { label: URL, name: url, widget: string }
+          - label: Footer
+            name: footer
+            widget: object
+            fields:
+              - { label: Citazione, name: quote, widget: string }
+              - { label: Tagline, name: tagline, widget: text }
+              - { label: "Titolo colonna link", name: esplora_title, widget: string }
+              - label: "Link footer"
+                name: links
+                widget: list
+                label_singular: "Link"
+                fields:
+                  - { label: Etichetta, name: label, widget: string }
+                  - { label: URL, name: url, widget: string }
+              - { label: Disclaimer, name: disclaimer, widget: text }
+              - { label: "Suffisso copyright", name: copyright_suffix, widget: string }
+          - label: "Banner cookie"
+            name: cookie
+            widget: object
+            fields:
+              - { label: Testo, name: text, widget: text }
+              - { label: "Bottone Accetta", name: accept, widget: string }
+              - { label: "Bottone Rifiuta", name: reject, widget: string }
+          - label: "Pagina 404"
+            name: notfound
+            widget: object
+            fields:
+              - { label: "Codice (404)", name: code, widget: string }
+              - { label: Titolo, name: title, widget: string }
+              - { label: Testo, name: text, widget: text }
+              - { label: "CTA home — etichetta", name: cta_home, widget: string }
+              - { label: "CTA vini — etichetta", name: cta_vini, widget: string }
+              - { label: "CTA vini — URL", name: cta_vini_url, widget: string }
+          - label: "Etichette ricorrenti (testi dei template)"
+            name: labels
+            widget: object
+            collapsed: true
+            fields:
+              - { label: "Scopri di più", name: scopri_di_piu, widget: string }
+              - { label: "Leggi l'articolo", name: leggi_articolo, widget: string }
+              - { label: "Filtro: Tutti", name: filtro_tutti, widget: string }
+              - { label: "Min di lettura", name: min_lettura, widget: string }
+              - { label: "Intro categoria blog", name: blog_categoria_intro, widget: string }
+              - label: "Cantine"
+                name: cantine
+                widget: object
+                collapsed: true
+                fields:
+                  - { label: "Torna alle cantine", name: torna, widget: string }
+                  - { label: "Label Fondazione", name: fondazione_label, widget: string }
+                  - { label: "Label Ettari", name: ettari_label, widget: string }
+                  - { label: "Unità ettari", name: ettari_unit, widget: string }
+                  - { label: "Label Produzione", name: produzione_label, widget: string }
+                  - { label: "Titolo Storia", name: storia, widget: string }
+                  - { label: "Titolo Filosofia", name: filosofia, widget: string }
+                  - { label: "Titolo Vini Principali", name: vini_principali, widget: string }
+                  - { label: "Label 'Vini principali:'", name: vini_principali_label, widget: string }
+                  - { label: "'Vini di' (+ nome)", name: vini_della, widget: string }
+                  - { label: "CTA titolo", name: cta_title, widget: string }
+                  - { label: "CTA testo", name: cta_text, widget: text }
+                  - { label: "CTA bottone", name: cta_button, widget: string }
+              - label: "Vini"
+                name: vini
+                widget: object
+                collapsed: true
+                fields:
+                  - { label: "Torna ai vini", name: torna, widget: string }
+                  - { label: "'Servire a' (+ temp)", name: servire_a, widget: string }
+                  - { label: "Titolo Note di Degustazione", name: note_title, widget: string }
+                  - { label: "Note: Vista", name: note_vista, widget: string }
+                  - { label: "Note: Olfatto", name: note_olfatto, widget: string }
+                  - { label: "Note: Gusto", name: note_gusto, widget: string }
+                  - { label: "Titolo Abbinamenti", name: abbinamenti_title, widget: string }
+                  - { label: "'Altri vini di' (+ cantina)", name: altri_di, widget: string }
+                  - { label: "CTA titolo", name: cta_title, widget: string }
+                  - { label: "CTA testo", name: cta_text, widget: text }
+                  - { label: "CTA bottone", name: cta_button, widget: string }
+              - label: "Blog"
+                name: blog
+                widget: object
+                collapsed: true
+                fields:
+                  - { label: "Torna al Blog", name: torna, widget: string }
+                  - { label: "Titolo Articoli Correlati", name: correlati, widget: string }
+                  - { label: "Bio autore", name: autore_bio, widget: text }
+                  - { label: "Banda titolo", name: band_title, widget: string }
+                  - { label: "Banda testo", name: band_text, widget: text }
+              - label: "Eventi"
+                name: eventi
+                widget: object
+                collapsed: true
+                fields:
+                  - { label: "Banda titolo", name: band_title, widget: string }
+                  - { label: "Banda testo", name: band_text, widget: text }
+              - label: "Territorio"
+                name: territorio
+                widget: object
+                collapsed: true
+                fields:
+                  - { label: "Titolo 'Le Chiavi del Successo'", name: chiavi_title, widget: string }
+                  - { label: "Titolo 'Le Zone Vinicole'", name: zone_title, widget: string }
+                  - { label: "Titolo 'I Sapori dell'Abruzzo'", name: sapori_title, widget: string }
+              - label: "Sapori"
+                name: sapori
+                widget: object
+                collapsed: true
+                fields:
+                  - { label: "Torna ai Sapori", name: torna, widget: string }
+                  - { label: "Empty-state titolo", name: empty_title, widget: string }
+                  - { label: "Empty-state testo", name: empty_text, widget: text }

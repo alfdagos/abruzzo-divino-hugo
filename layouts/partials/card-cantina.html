@@ -1,0 +1,37 @@
+{{/* Card cantina riutilizzabile. Atteso: . = Page del cantina (leaf bundle). */}}
+{{- $cover := .Resources.GetMatch "cover.*" -}}
+<article class="group overflow-hidden rounded-lg bg-card shadow-md hover-lift">
+  <a href="{{ .RelPermalink }}" class="block">
+    <div class="aspect-video relative overflow-hidden bg-wine/10">
+      {{- with $cover -}}
+        {{- $img := . }}
+        {{- if and (eq .MediaType.SubType "jpeg") (ge .Width 1200) -}}
+          {{- $img = .Resize "1200x webp q85" -}}
+        {{- end -}}
+        <img
+          src="{{ $img.RelPermalink }}"
+          alt="{{ $.Title }}"
+          loading="lazy"
+          width="{{ $img.Width }}"
+          height="{{ $img.Height }}"
+          class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+        >
+      {{- end -}}
+      <div class="absolute inset-0 bg-gradient-to-t from-wine/80 to-transparent"></div>
+    </div>
+  </a>
+  <div class="p-6">
+    <h3 class="font-playfair text-2xl font-bold text-wine mb-2">
+      <a href="{{ .RelPermalink }}" class="hover:text-wine-dark transition-colors">{{ .Title }}</a>
+    </h3>
+    <div class="flex items-center text-sm text-muted-foreground mb-4">
+      <span class="text-gold mr-2 inline-flex">{{ partial "icons/map-pin.html" . }}</span>
+      <span>{{ .Params.localita }}{{ with index .Params.province 0 }} ({{ . }}){{ end }}</span>
+    </div>
+    <p class="text-muted-foreground mb-4 line-clamp-3">{{ .Params.descrizione }}</p>
+    <a href="{{ .RelPermalink }}" class="inline-flex items-center text-gold font-semibold group-hover:translate-x-2 transition-transform">
+      Scopri di più
+      <span class="ml-2 inline-flex">{{ partial "icons/arrow-right.html" . }}</span>
+    </a>
+  </div>
+</article>

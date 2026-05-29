@@ -1,0 +1,24 @@
+{{ define "main" }}
+{{- $nf := hugo.Data.ui.notfound -}}
+<section class="min-h-screen bg-cream flex items-center justify-center px-4 pt-24 pb-16">
+  <div class="max-w-xl text-center">
+    <p class="font-playfair text-6xl font-bold text-gold mb-4">{{ $nf.code }}</p>
+    <h1 class="font-playfair text-4xl md:text-5xl font-bold text-wine mb-6">{{ $nf.title }}</h1>
+    <p class="font-lato text-lg text-foreground/70 mb-8">{{ $nf.text }}</p>
+    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+      <a
+        href="{{ "/" | relURL }}"
+        class="inline-block bg-wine hover:bg-wine-dark text-cream px-8 py-3 rounded-md font-semibold transition-colors"
+      >
+        {{ $nf.cta_home }}
+      </a>
+      <a
+        href="{{ $nf.cta_vini_url | default "/vini/" | relURL }}"
+        class="inline-block border-2 border-wine text-wine hover:bg-wine hover:text-cream px-8 py-3 rounded-md font-semibold transition-colors"
+      >
+        {{ $nf.cta_vini }}
+      </a>
+    </div>
+  </div>
+</section>
+{{ end }}

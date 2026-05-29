@@ -1,0 +1,9 @@
+{{- /* Restituisce la risorsa immagine di copertina di un leaf bundle.
+       Default: cover.* (convenzione storica). Override: param `image` nel front
+       matter (usato dai contenuti creati via Sveltia CMS, che salva il file col
+       proprio nome). Atteso: . = Page con risorse. */ -}}
+{{- $r := .Resources.GetMatch "cover.*" -}}
+{{- with .Params.image -}}
+  {{- with ($.Resources.GetMatch .) }}{{ $r = . }}{{ end -}}
+{{- end -}}
+{{- return $r -}}

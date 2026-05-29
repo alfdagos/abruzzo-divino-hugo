@@ -1,0 +1,130 @@
+{{ define "main" }}
+
+{{- $L := hugo.Data.ui.labels.cantine -}}
+{{- $cover := partial "func/cover.html" . -}}
+{{- $heroImg := "" -}}
+{{- with $cover -}}
+  {{- if and (eq .MediaType.SubType "jpeg") (ge .Width 1400) -}}
+    {{- $heroImg = .Resize "1600x webp q85" -}}
+  {{- else -}}
+    {{- $heroImg = . -}}
+  {{- end -}}
+{{- end -}}
+
+{{/* Hero immagine pieno + overlay */}}
+<section class="pt-20 relative">
+  <div class="h-[60vh] relative overflow-hidden">
+    {{- with $heroImg -}}
+    <img src="{{ .RelPermalink }}" alt="{{ $.Title }}"
+         width="{{ .Width }}" height="{{ .Height }}"
+         class="w-full h-full object-cover">
+    {{- end -}}
+    <div class="absolute inset-0 bg-gradient-to-t from-wine/90 via-wine/50 to-transparent"></div>
+    <div class="absolute bottom-0 left-0 right-0 p-8">
+      <div class="container mx-auto">
+        <a href="{{ "/cantine/" | relURL }}" class="inline-flex items-center text-cream hover:text-gold transition-colors mb-4 font-semibold">
+          <span class="mr-2 inline-flex">{{ partial "icons/arrow-left.html" . }}</span>
+          {{ $L.torna }}
+        </a>
+        <h1 class="font-playfair text-5xl md:text-6xl font-bold text-cream mb-4 animate-fade-in">
+          {{ .Title }}
+        </h1>
+        {{ with .Params.localita }}
+          <div class="flex items-center text-gold text-xl">
+            <span class="mr-2 inline-flex">{{ partial "icons/map-pin.html" $ }}</span>
+            <span class="font-semibold">{{ . }}{{ with index $.Params.province 0 }} ({{ . }}){{ end }}</span>
+          </div>
+        {{ end }}
+      </div>
+    </div>
+  </div>
+</section>
+
+{{/* 3 stat card: fondazione | ettari | produzione */}}
+<section class="py-16 bg-background">
+  <div class="container mx-auto px-4">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+      <div class="bg-card p-6 rounded-lg shadow text-center">
+        <div class="text-gold mx-auto mb-3 inline-flex">{{ partial "icons/calendar.html" . }}</div>
+        <h3 class="font-playfair text-lg font-semibold text-wine mb-2">{{ $L.fondazione_label }}</h3>
+        <p class="text-2xl font-bold text-foreground">{{ .Params.fondazione }}</p>
+      </div>
+      <div class="bg-card p-6 rounded-lg shadow text-center">
+        <div class="text-gold mx-auto mb-3 inline-flex">{{ partial "icons/grape.html" . }}</div>
+        <h3 class="font-playfair text-lg font-semibold text-wine mb-2">{{ $L.ettari_label }}</h3>
+        <p class="text-2xl font-bold text-foreground">{{ .Params.ettari }} {{ $L.ettari_unit }}</p>
+      </div>
+      <div class="bg-card p-6 rounded-lg shadow text-center">
+        <div class="text-gold mx-auto mb-3 inline-flex">{{ partial "icons/bar-chart.html" . }}</div>
+        <h3 class="font-playfair text-lg font-semibold text-wine mb-2">{{ $L.produzione_label }}</h3>
+        <p class="text-2xl font-bold text-foreground">{{ .Params.produzione }}</p>
+      </div>
+    </div>
+
+    {{/* Storia + filosofia + vini principali */}}
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+      <div>
+        <h2 class="font-playfair text-3xl font-bold text-wine mb-6">{{ $L.storia }}</h2>
+        <div class="text-foreground leading-relaxed mb-6 text-lg prose prose-lg max-w-none">
+          {{ .Content }}
+        </div>
+        {{ with .Params.descrizione }}
+          <p class="text-muted-foreground leading-relaxed text-lg">{{ . }}</p>
+        {{ end }}
+      </div>
+      <div>
+        <h2 class="font-playfair text-3xl font-bold text-wine mb-6">{{ $L.filosofia }}</h2>
+        <p class="text-foreground leading-relaxed mb-8 text-lg">{{ .Params.filosofia }}</p>
+
+        {{ with .Params.vini_principali }}
+          <div class="bg-cream/30 rounded-lg p-6">
+            <h3 class="font-playfair text-2xl font-bold text-wine mb-4 flex items-center">
+              <span class="mr-3 text-gold inline-flex">{{ partial "icons/wine.html" $ }}</span>
+              {{ $L.vini_principali }}
+            </h3>
+            <ul class="space-y-3">
+              {{ range . }}
+                <li class="flex items-start">
+                  <span class="w-2 h-2 rounded-full bg-gold mt-2 mr-3 flex-shrink-0"></span>
+                  <span class="text-foreground font-medium">{{ . }}</span>
+                </li>
+              {{ end }}
+            </ul>
+          </div>
+        {{ end }}
+      </div>
+    </div>
+  </div>
+</section>
+
+{{/* Vini di questa cantina (cross-ref via cantina_slug) */}}
+{{- $self := .File.ContentBaseName -}}
+{{- $relatedVini := where site.RegularPages "Params.cantina_slug" $self -}}
+{{ with $relatedVini }}
+<section class="py-16 bg-cream">
+  <div class="container mx-auto px-4">
+    <h2 class="font-playfair text-4xl font-bold text-wine mb-12 text-center">
+      {{ $L.vini_della }} {{ $.Title }}
+    </h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {{ range .ByWeight }}
+        {{ partial "card-vino.html" . }}
+      {{ end }}
+    </div>
+  </div>
+</section>
+{{ end }}
+
+{{/* CTA finale — niente "Esperienze in cantina" fake (DECISIONS #14) */}}
+<section class="py-16 bg-gradient-to-r from-wine to-wine-dark text-cream">
+  <div class="container mx-auto px-4 text-center max-w-3xl">
+    <h2 class="font-playfair text-4xl font-bold mb-6">{{ $L.cta_title }}</h2>
+    <p class="text-xl text-cream/90 mb-8">{{ $L.cta_text }}</p>
+    <a href="{{ "/cantine/" | relURL }}"
+       class="inline-block bg-gold hover:bg-gold-light text-wine px-8 py-4 rounded-md font-semibold text-lg transition-colors">
+      {{ $L.cta_button }}
+    </a>
+  </div>
+</section>
+
+{{ end }}

@@ -1,0 +1,76 @@
+{{ define "main" }}
+
+{{- $L := hugo.Data.ui.labels -}}
+
+{{/* Hero — sezione list */}}
+<section class="pt-32 pb-16 bg-gradient-to-b from-wine to-wine-dark text-cream">
+  <div class="container mx-auto px-4 text-center">
+    <h1 data-scroll-fade class="font-playfair text-5xl md:text-6xl font-bold mb-6">{{ .Title }}</h1>
+    <p class="text-xl md:text-2xl text-cream/90 max-w-3xl mx-auto animate-fade-in-up">
+      {{ .Description | default "Le migliori cantine abruzzesi, custodi di tradizione millenaria e innovazione enologica" }}
+    </p>
+  </div>
+</section>
+
+{{/* Grid 2-col: card grande con immagine a sinistra + meta+vini a destra */}}
+<section class="py-16 bg-cream">
+  <div class="container mx-auto px-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      {{ range .Pages.ByWeight }}
+        {{- $cover := partial "func/cover.html" . -}}
+        {{- $img := "" -}}
+        {{- with $cover -}}
+          {{- if and (eq .MediaType.SubType "jpeg") (ge .Width 800) -}}
+            {{- $img = .Resize "900x webp q82" -}}
+          {{- else -}}
+            {{- $img = . -}}
+          {{- end -}}
+        {{- end -}}
+        <a href="{{ .RelPermalink }}" class="block group">
+          <article class="overflow-hidden rounded-lg bg-card shadow-md hover-lift">
+            <div class="md:flex h-full">
+              <div class="md:w-2/5 aspect-square md:aspect-auto relative overflow-hidden">
+                {{- with $img -}}
+                <img src="{{ .RelPermalink }}" alt="{{ $.Title }}" loading="lazy"
+                     width="{{ .Width }}" height="{{ .Height }}"
+                     class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                {{- end -}}
+                <div class="absolute inset-0 bg-gradient-to-t from-wine/60 to-transparent"></div>
+              </div>
+              <div class="md:w-3/5 p-6">
+                <h2 class="font-playfair text-3xl font-bold text-wine mb-2 group-hover:text-wine-dark transition-colors">
+                  {{ .Title }}
+                </h2>
+                <div class="flex items-center text-gold mb-4">
+                  <span class="mr-2 inline-flex">{{ partial "icons/map-pin.html" . }}</span>
+                  <span class="font-semibold">{{ .Params.localita }}{{ with index .Params.province 0 }} ({{ . }}){{ end }}</span>
+                </div>
+                <p class="text-muted-foreground mb-4 leading-relaxed">{{ .Params.descrizione }}</p>
+                <p class="text-foreground mb-4 text-sm leading-relaxed">{{ .Content | plainify | truncate 280 }}</p>
+                {{ with .Params.vini_principali }}
+                  <div class="mb-4">
+                    <h3 class="font-playfair font-semibold text-wine mb-2">{{ $L.cantine.vini_principali_label }}</h3>
+                    <ul class="text-sm text-muted-foreground space-y-1">
+                      {{ range first 3 . }}
+                        <li class="flex items-center">
+                          <span class="w-1.5 h-1.5 rounded-full bg-gold mr-2"></span>
+                          {{ . }}
+                        </li>
+                      {{ end }}
+                    </ul>
+                  </div>
+                {{ end }}
+                <div class="flex items-center text-gold font-semibold group-hover:translate-x-2 transition-transform">
+                  {{ $L.scopri_di_piu }}
+                  <span class="ml-2 inline-flex">{{ partial "icons/arrow-right.html" . }}</span>
+                </div>
+              </div>
+            </div>
+          </article>
+        </a>
+      {{ end }}
+    </div>
+  </div>
+</section>
+
+{{ end }}

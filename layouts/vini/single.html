@@ -1,0 +1,142 @@
+{{ define "main" }}
+
+{{- $L := hugo.Data.ui.labels.vini -}}
+{{- $cover := partial "func/cover.html" . -}}
+{{- $tipologia := index .Params.tipologie 0 -}}
+{{- $badge := "bg-wine text-cream" -}}
+{{- if eq $tipologia "Bianco" -}}{{ $badge = "bg-gold text-wine" -}}
+{{- else if eq $tipologia "Rosato" -}}{{ $badge = "bg-wine-light text-cream" -}}
+{{- else if eq $tipologia "Passito" -}}{{ $badge = "bg-wine-dark text-cream" -}}
+{{- else if eq $tipologia "Spumante" -}}{{ $badge = "bg-gold-light text-wine" -}}
+{{- end -}}
+
+{{/* Back link */}}
+<div class="container mx-auto px-4 pt-24">
+  <a href="{{ "/vini/" | relURL }}" class="inline-flex items-center text-wine hover:text-gold transition-colors mb-4 font-semibold">
+    <span class="mr-2 inline-flex">{{ partial "icons/arrow-left.html" . }}</span>
+    {{ $L.torna }}
+  </a>
+</div>
+
+{{/* Hero: immagine bottiglia + meta */}}
+<section class="py-12 bg-gradient-to-b from-wine/5 to-background">
+  <div class="container mx-auto px-4">
+    <div class="grid md:grid-cols-2 gap-12 items-center">
+      <div class="relative">
+        <div class="aspect-[3/4] bg-gradient-to-b from-wine/10 to-wine/5 rounded-lg overflow-hidden">
+          {{- with $cover -}}
+          <img src="{{ .RelPermalink }}" alt="{{ $.Title }} - {{ $.Params.cantina }}"
+               width="{{ .Width }}" height="{{ .Height }}"
+               class="w-full h-full object-contain p-12">
+          {{- end -}}
+        </div>
+        <div class="absolute top-6 left-6">
+          <span class="px-4 py-2 rounded-full text-sm font-bold {{ $badge }}">{{ $tipologia }}</span>
+        </div>
+        {{ with .Params.annata }}
+          <div class="absolute top-6 right-6">
+            <span class="px-4 py-2 bg-cream/95 text-wine rounded-full text-sm font-bold">{{ . }}</span>
+          </div>
+        {{ end }}
+      </div>
+
+      <div>
+        <h1 class="font-playfair text-5xl md:text-6xl font-bold text-wine mb-4 animate-fade-in">{{ .Title }}</h1>
+        {{ with .Params.cantina }}
+          {{- $cs := $.Params.cantina_slug -}}
+          <p class="text-2xl text-gold font-semibold mb-4 flex items-center gap-2">
+            <span class="inline-flex">{{ partial "icons/map-pin.html" $ }}</span>
+            {{ if $cs }}<a href="{{ (printf "/cantine/%s/" $cs) | relURL }}" class="hover:text-wine transition-colors">{{ . }}</a>{{ else }}{{ . }}{{ end }}
+          </p>
+        {{ end }}
+        {{ with .Params.vitigno_label }}
+          <p class="text-xl text-muted-foreground mb-6 italic">{{ . }}</p>
+        {{ end }}
+        <div class="text-lg text-foreground leading-relaxed mb-8 prose prose-lg max-w-none">
+          {{ .Content }}
+        </div>
+        {{ with .Params.temperatura }}
+          <div class="flex items-center gap-4 text-wine">
+            <div class="flex items-center">
+              <span class="mr-2 text-gold inline-flex">{{ partial "icons/thermometer.html" $ }}</span>
+              <span class="font-semibold">{{ $L.servire_a }} {{ . }}</span>
+            </div>
+          </div>
+        {{ end }}
+      </div>
+    </div>
+  </div>
+</section>
+
+{{/* Note di degustazione: 3 card */}}
+{{ with .Params.note_degustazione }}
+<section class="py-16 bg-background">
+  <div class="container mx-auto px-4">
+    <h2 class="font-playfair text-4xl font-bold text-wine mb-8 text-center">{{ $L.note_title }}</h2>
+    <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+      <div class="p-8 bg-card rounded-lg shadow hover-lift">
+        <div class="w-16 h-16 rounded-full bg-wine/10 flex items-center justify-center mb-4 mx-auto text-wine">{{ partial "icons/wine.html" $ }}</div>
+        <h3 class="font-playfair text-2xl font-bold text-wine mb-4 text-center">{{ $L.note_vista }}</h3>
+        <p class="text-foreground leading-relaxed text-center">{{ .vista }}</p>
+      </div>
+      <div class="p-8 bg-card rounded-lg shadow hover-lift">
+        <div class="w-16 h-16 rounded-full bg-gold/10 flex items-center justify-center mb-4 mx-auto text-gold">{{ partial "icons/wine.html" $ }}</div>
+        <h3 class="font-playfair text-2xl font-bold text-wine mb-4 text-center">{{ $L.note_olfatto }}</h3>
+        <p class="text-foreground leading-relaxed text-center">{{ .olfatto }}</p>
+      </div>
+      <div class="p-8 bg-card rounded-lg shadow hover-lift">
+        <div class="w-16 h-16 rounded-full bg-wine-light/10 flex items-center justify-center mb-4 mx-auto text-wine-dark">{{ partial "icons/wine.html" $ }}</div>
+        <h3 class="font-playfair text-2xl font-bold text-wine mb-4 text-center">{{ $L.note_gusto }}</h3>
+        <p class="text-foreground leading-relaxed text-center">{{ .gusto }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+{{ end }}
+
+{{/* Abbinamenti */}}
+{{ with .Params.abbinamenti }}
+<section class="py-16 bg-gradient-to-b from-wine/5 to-background">
+  <div class="container mx-auto px-4">
+    <h2 class="font-playfair text-4xl font-bold text-wine mb-8 text-center">{{ $L.abbinamenti_title }}</h2>
+    <div class="flex flex-wrap gap-4 justify-center max-w-4xl mx-auto">
+      {{ range . }}
+        <div class="px-6 py-4 bg-cream rounded-lg shadow hover-lift">
+          <p class="text-wine font-semibold text-lg">{{ . }}</p>
+        </div>
+      {{ end }}
+    </div>
+  </div>
+</section>
+{{ end }}
+
+{{/* Altri vini della stessa cantina (cross-ref reale, niente recensioni fake — DECISIONS #13) */}}
+{{- $cs := .Params.cantina_slug -}}
+{{- $related := where (where site.RegularPages "Section" "vini") "Params.cantina_slug" $cs -}}
+{{- $related = where $related "Permalink" "!=" .Permalink -}}
+{{ with $related }}
+<section class="py-16 bg-background">
+  <div class="container mx-auto px-4">
+    <h2 class="font-playfair text-4xl font-bold text-wine mb-12 text-center">{{ $L.altri_di }} {{ $.Params.cantina }}</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {{ range .ByWeight }}
+        {{ partial "card-vino.html" . }}
+      {{ end }}
+    </div>
+  </div>
+</section>
+{{ end }}
+
+{{/* CTA finale */}}
+<section class="py-16 bg-gradient-to-b from-wine to-wine-dark text-cream">
+  <div class="container mx-auto px-4 text-center">
+    <h2 class="font-playfair text-4xl font-bold mb-6">{{ $L.cta_title }}</h2>
+    <p class="text-xl text-cream/90 mb-8 max-w-2xl mx-auto">{{ $L.cta_text }}</p>
+    <a href="{{ "/vini/" | relURL }}"
+       class="inline-block bg-gold hover:bg-gold-light text-wine px-8 py-4 rounded-md font-semibold text-lg transition-colors">
+      {{ $L.cta_button }}
+    </a>
+  </div>
+</section>
+
+{{ end }}

@@ -1,0 +1,58 @@
+{{/* Navbar — logica scroll/mobile in assets/js/navbar.js (DECISIONS #23, #24).
+     Contenuti (brand + voci) da hugo.Data.ui (editabili dal CMS). */}}
+{{- $ui := hugo.Data.ui -}}
+{{- $menu := $ui.menu -}}
+<nav id="site-navbar" class="site-nav fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-transparent">
+  <div class="container mx-auto px-4">
+    <div class="flex items-center justify-between h-20">
+      <a href="{{ "/" | relURL }}" class="flex items-center space-x-2 group">
+        <span class="site-nav-brand font-playfair text-2xl font-bold text-gold transition-colors">
+          {{ $ui.brand }}
+        </span>
+      </a>
+
+      <ul class="hidden lg:flex items-center space-x-8">
+        {{- range $menu }}
+          <li>
+            <a href="{{ .url | relURL }}" class="font-lato font-medium text-cream hover:text-gold transition-colors">
+              {{ .label }}
+            </a>
+          </li>
+        {{- end }}
+      </ul>
+
+      {{/* Mobile toggle: le due icone si alternano via CSS in base ad aria-expanded. */}}
+      <button
+        type="button"
+        class="lg:hidden p-2 text-gold"
+        aria-label="Apri menu"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        data-menu-toggle
+      >
+        <svg class="icon-menu" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+        <svg class="icon-close" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    {{/* Menu mobile: nascosto di default, mostrato da .is-open (toggle JS). */}}
+    <div id="mobile-menu" class="lg:hidden pb-4 bg-background/95 rounded-b-lg" style="backdrop-filter: blur(6px);">
+      <ul class="flex flex-col space-y-1 pt-2">
+        {{- range $menu }}
+          <li>
+            <a href="{{ .url | relURL }}" class="block font-lato font-medium text-foreground hover:text-gold hover:bg-wine/5 transition-colors px-4 py-3 rounded-md">
+              {{ .label }}
+            </a>
+          </li>
+        {{- end }}
+      </ul>
+    </div>
+  </div>
+</nav>

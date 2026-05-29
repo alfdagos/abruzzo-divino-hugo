@@ -1,0 +1,23 @@
+{{/* Barra filtri blog. Atteso: . = categoria attiva (stringa) oppure "" per "Tutti".
+     Niente JS: ogni bottone è un link a una pagina statica (DECISIONS #11). */}}
+{{- $active := . -}}
+{{- $base := "px-6 py-2 rounded-full font-semibold transition-all" -}}
+<section class="py-8 bg-cream/30 border-b border-wine/10">
+  <div class="container mx-auto px-4">
+    <div class="flex flex-wrap gap-3 justify-center">
+      <a href="{{ "/blog/" | relURL }}"
+         class="{{ $base }} {{ if eq $active "" }}bg-wine text-cream{{ else }}bg-cream text-wine hover:bg-wine/10{{ end }}">
+        {{ hugo.Data.ui.labels.filtro_tutti }}
+      </a>
+      {{- range slice "Territorio" "Degustazione" "Cultura" }}
+        {{- $label := . -}}
+        {{- with site.GetPage (printf "/categories/%s" (urlize .)) }}
+          <a href="{{ .RelPermalink }}"
+             class="{{ $base }} {{ if eq $active $label }}bg-wine text-cream{{ else }}bg-cream text-wine hover:bg-wine/10{{ end }}">
+            {{ $label }}
+          </a>
+        {{- end }}
+      {{- end }}
+    </div>
+  </div>
+</section>

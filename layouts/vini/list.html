@@ -1,0 +1,24 @@
+{{ define "main" }}
+
+{{/* Hero — sezione list, copy Lovable verbatim */}}
+<section class="pt-32 pb-16 bg-gradient-to-b from-wine to-wine-dark text-cream">
+  <div class="container mx-auto px-4 text-center">
+    <h1 data-scroll-fade class="font-playfair text-5xl md:text-6xl font-bold mb-6">{{ .Title }}</h1>
+    <p class="text-xl md:text-2xl text-cream/90 max-w-3xl mx-auto animate-fade-in-up">
+      {{ .Description | default "Le etichette che hanno scritto la storia dell'enologia abruzzese nel mondo" }}
+    </p>
+  </div>
+</section>
+
+{{/* Grid 3-col di card vino */}}
+<section class="py-16 bg-background">
+  <div class="container mx-auto px-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {{ range .Pages.ByWeight }}
+        {{ partial "card-vino.html" . }}
+      {{ end }}
+    </div>
+  </div>
+</section>
+
+{{ end }}

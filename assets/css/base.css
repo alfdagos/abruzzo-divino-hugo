@@ -1,0 +1,110 @@
+/* Tipografia, regole base, utility custom e keyframes.
+   I font Playfair Display + Lato sono caricati via Google Fonts <link>
+   nel partial layouts/partials/head.html (preconnect + display=swap). */
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-lato;
+    scroll-behavior: smooth;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-playfair;
+  }
+}
+
+/* Navbar scroll-aware: stati controllati da assets/js/navbar.js (DECISIONS #23). */
+@layer components {
+  .site-nav.is-scrolled {
+    @apply bg-background/95 shadow-lg;
+    backdrop-filter: blur(6px);
+  }
+  .site-nav.is-scrolled a,
+  .site-nav.is-scrolled span,
+  .site-nav.is-scrolled button {
+    @apply text-foreground;
+  }
+  .site-nav.is-scrolled .site-nav-brand {
+    @apply text-wine;
+  }
+
+  /* Menu mobile: nascosto di default, mostrato da .is-open (toggle in navbar.js). */
+  #mobile-menu {
+    display: none;
+  }
+  #mobile-menu.is-open {
+    display: block;
+  }
+
+  /* Alternanza icona hamburger / X in base allo stato aria-expanded. */
+  [data-menu-toggle] .icon-close {
+    display: none;
+  }
+  [data-menu-toggle][aria-expanded="true"] .icon-menu {
+    display: none;
+  }
+  [data-menu-toggle][aria-expanded="true"] .icon-close {
+    display: inline;
+  }
+
+  /* Cookie banner GDPR: nascosto di default, mostrato da cookie-consent.js. */
+  .cookie-banner {
+    display: none;
+  }
+  .cookie-banner.is-visible {
+    display: block;
+  }
+}
+
+@layer utilities {
+  .text-gradient-gold {
+    @apply bg-gradient-to-r from-gold-light to-gold bg-clip-text text-transparent;
+  }
+
+  .hover-lift {
+    @apply transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl;
+  }
+
+  .parallax-slow {
+    will-change: transform;
+  }
+
+  /* Scroll-fade: opacity + slide-in al primo intersect (vedi assets/js/scroll-fade.js). */
+  [data-scroll-fade] {
+    opacity: 0;
+    transform: translateY(2.5rem);
+    transition: opacity 1s ease-out, transform 1s ease-out;
+  }
+  [data-scroll-fade].is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Line clamp utility (compat browser senza @tailwindcss/line-clamp). */
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+/* Keyframes (le utility animate-* sono mappate in tailwind.config.js). */
+@keyframes fade-in {
+  0%   { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-in-up {
+  0%   { opacity: 0; transform: translateY(30px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scale-in {
+  0%   { opacity: 0; transform: scale(0.95); }
+  100% { opacity: 1; transform: scale(1); }
+}

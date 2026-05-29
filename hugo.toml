@@ -1,0 +1,63 @@
+baseURL = "https://abruzzodivino.it/"
+defaultContentLanguage = "it"
+title = "Abruzzo diVino"
+
+[languages]
+  [languages.it]
+    locale = "it-IT"
+    label = "Italiano"
+    weight = 1
+enableRobotsTXT = true
+enableEmoji = false
+
+[params]
+  description = "L'eleganza del vino abruzzese in ogni calice. Scopri le eccellenze enogastronomiche, cantine prestigiose e il territorio d'Abruzzo."
+  payoff = "L'eleganza del vino abruzzese in ogni calice"
+  ga4 = "G-QKBXN56SPE"
+
+[taxonomies]
+  # NOTA: la tassonomia "cantine" prevista da DECISIONS #4 collide con il section
+  # URL /cantine/ (le cantine sono leaf bundle a content/cantine/<slug>/). Per ora
+  # gestiamo la relazione vino→cantina via parametro `cantina_slug` nel front
+  # matter dei vini, da risolvere a runtime con range/where. Reintrodurre la
+  # taxonomy in futuro mappandola via [permalinks] a URL diverso (es. /produttore/).
+  vitigno = "vitigni"
+  provincia = "province"
+  tipologia = "tipologie"
+  stagione = "stagioni"
+  tag = "tags"
+  category = "categories"
+
+# Le pagine categoria del blog vivono sotto /blog/categorie/<slug>/ (DECISIONS #11)
+[permalinks]
+  [permalinks.term]
+    categories = "/blog/categorie/:slug/"
+  [permalinks.taxonomy]
+    categories = "/blog/categorie/"
+
+[markup]
+  [markup.goldmark.renderer]
+    unsafe = true
+  [markup.tableOfContents]
+    startLevel = 2
+    endLevel = 4
+
+[outputs]
+  home = ["HTML", "RSS"]
+  section = ["HTML", "RSS"]
+
+[minify]
+  minifyOutput = true
+  [minify.tdewolff.html]
+    keepWhitespace = false
+
+# Override del Node permission model di Hugo. Su Windows i path extended-length
+# (\\?\C:\...) che Hugo passa a Node non matchano il default "." di allowread,
+# rompendo Tailwind PostCSS. Apriamo lettura su tutto il progetto.
+[security]
+  [security.node]
+    [security.node.permissions]
+      allowread = ['*']
+      allowaddons = ['tailwindcss']
+      allowchildprocess = ['tailwindcss']
+      allowworker = ['tailwindcss']

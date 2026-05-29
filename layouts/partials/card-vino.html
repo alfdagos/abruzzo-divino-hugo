@@ -1,0 +1,43 @@
+{{/* Card vino riutilizzabile. Atteso: . = Page del vino (leaf bundle). */}}
+{{- $cover := partial "func/cover.html" . -}}
+{{- $tipologia := index .Params.tipologie 0 -}}
+{{- $badge := "bg-wine text-cream" -}}
+{{- if eq $tipologia "Bianco" -}}{{ $badge = "bg-gold text-wine" -}}
+{{- else if eq $tipologia "Rosato" -}}{{ $badge = "bg-wine-light text-cream" -}}
+{{- else if eq $tipologia "Passito" -}}{{ $badge = "bg-wine-dark text-cream" -}}
+{{- else if eq $tipologia "Spumante" -}}{{ $badge = "bg-gold-light text-wine" -}}
+{{- end -}}
+<article class="group overflow-hidden rounded-lg bg-card shadow-md hover-lift">
+  <a href="{{ .RelPermalink }}" class="block">
+    <div class="aspect-[3/4] relative overflow-hidden bg-gradient-to-b from-wine/5 to-wine/10">
+      {{- with $cover -}}
+        <img
+          src="{{ .RelPermalink }}"
+          alt="{{ $.Title }} - {{ $.Params.cantina }}"
+          loading="lazy"
+          width="{{ .Width }}"
+          height="{{ .Height }}"
+          class="w-full h-full object-contain p-8 transition-transform duration-500 group-hover:scale-110"
+        >
+      {{- end -}}
+      <div class="absolute top-4 left-4 right-4 flex justify-between items-start">
+        <span class="px-3 py-1 rounded-full text-xs font-semibold {{ $badge }}">{{ $tipologia }}</span>
+        {{ with .Params.annata }}
+          <span class="px-3 py-1 bg-cream/90 text-wine rounded-full text-xs font-bold">{{ . }}</span>
+        {{ end }}
+      </div>
+    </div>
+  </a>
+  <div class="p-6">
+    <h3 class="font-playfair text-xl font-bold text-wine mb-1">
+      <a href="{{ .RelPermalink }}" class="hover:text-wine-dark transition-colors">{{ .Title }}</a>
+    </h3>
+    <p class="text-sm text-gold font-semibold mb-3">{{ .Params.cantina }}</p>
+    <p class="text-sm text-muted-foreground mb-2 italic">{{ .Params.vitigno_label }}</p>
+    <p class="text-muted-foreground text-sm line-clamp-3 mb-4">{{ .Summary | plainify | default (.Params.descrizione | default "") }}</p>
+    <a href="{{ .RelPermalink }}" class="inline-flex items-center text-gold font-semibold text-sm group-hover:translate-x-2 transition-transform">
+      {{ hugo.Data.ui.labels.scopri_di_piu }}
+      <span class="ml-2 inline-flex">{{ partial "icons/arrow-right.html" . }}</span>
+    </a>
+  </div>
+</article>

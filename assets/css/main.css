@@ -1,0 +1,10 @@
+/* Entrypoint CSS. Hugo Pipes lo passa a PostCSS con inlineImports:true,
+   quindi tokens.css e base.css vengono inlinati prima della compilazione
+   Tailwind. Tailwind riordina poi gli @layer in base/components/utilities. */
+
+@import "tokens.css";
+@import "base.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

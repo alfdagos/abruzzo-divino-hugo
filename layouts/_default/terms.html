@@ -1,0 +1,18 @@
+{{/* Stub terms list — pagina che lista tutti i termini di una tassonomia. */}}
+{{ define "main" }}
+<section class="pt-32 pb-16 bg-cream">
+  <div class="container mx-auto px-4">
+    <h1 class="font-playfair text-4xl font-bold text-wine mb-8 text-center capitalize">{{ .Title }}</h1>
+    <ul class="max-w-2xl mx-auto space-y-2">
+      {{ range .Data.Terms.ByCount }}
+        <li>
+          <a href="{{ .Page.RelPermalink }}" class="text-wine hover:text-gold font-semibold capitalize">
+            {{ .Page.Title }}
+          </a>
+          <span class="text-muted-foreground text-sm">({{ .Count }})</span>
+        </li>
+      {{ end }}
+    </ul>
+  </div>
+</section>
+{{ end }}

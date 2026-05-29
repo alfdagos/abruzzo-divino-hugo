@@ -1,0 +1,93 @@
+# Stringhe globali dell'interfaccia (editabili dal CMS → "Impostazioni sito").
+# Lette dai template via site.Data.ui.*
+
+brand: "Abruzzo diVino"
+
+# Menu di navigazione (navbar desktop + mobile)
+menu:
+  - { label: "Home", url: "/" }
+  - { label: "Cantine", url: "/cantine/" }
+  - { label: "Vini", url: "/vini/" }
+  - { label: "Territorio", url: "/territorio/" }
+  - { label: "Sapori", url: "/sapori/" }
+  - { label: "Eventi", url: "/eventi/" }
+  - { label: "Blog", url: "/blog/" }
+  - { label: "Chi Siamo", url: "/about/" }
+
+footer:
+  quote: "Il vino è la poesia della terra"
+  tagline: "L'eleganza del vino abruzzese in ogni calice. Scopri le eccellenze enogastronomiche del territorio più autentico d'Italia."
+  esplora_title: "Esplora"
+  links:
+    - { label: "Cantine d'Eccellenza", url: "/cantine/" }
+    - { label: "Vini Iconici", url: "/vini/" }
+    - { label: "Territorio", url: "/territorio/" }
+    - { label: "Sapori", url: "/sapori/" }
+    - { label: "Eventi", url: "/eventi/" }
+    - { label: "Blog", url: "/blog/" }
+  disclaimer: "Bevi responsabilmente. La vendita di alcolici ai minori di 18 anni è vietata."
+  copyright_suffix: "Tutti i diritti riservati."
+
+cookie:
+  text: "Questo sito usa cookie analitici (Google Analytics) per capire come viene utilizzato. Nessun cookie di profilazione viene installato senza il tuo consenso."
+  accept: "Accetta"
+  reject: "Rifiuta"
+
+notfound:
+  code: "404"
+  title: "Pagina non trovata"
+  text: "Il calice che cercavi sembra essersi smarrito tra i filari. Torna alla home per ritrovare la strada."
+  cta_home: "Torna alla home"
+  cta_vini: "Scopri i vini"
+  cta_vini_url: "/vini/"
+
+# Testi ricorrenti dei template (titoli sezione, CTA, microcopy).
+labels:
+  scopri_di_piu: "Scopri di più"
+  leggi_articolo: "Leggi l'articolo"
+  filtro_tutti: "Tutti"
+  min_lettura: "min di lettura"
+  blog_categoria_intro: "Articoli nella categoria"
+  cantine:
+    torna: "Torna alle cantine"
+    fondazione_label: "Fondazione"
+    ettari_label: "Ettari"
+    ettari_unit: "ha"
+    produzione_label: "Produzione"
+    storia: "La Storia"
+    filosofia: "Filosofia"
+    vini_principali: "Vini Principali"
+    vini_principali_label: "Vini principali:"
+    vini_della: "Vini di"
+    cta_title: "Vuoi saperne di più?"
+    cta_text: "Esplora la nostra selezione di cantine e scopri le storie dietro ogni bottiglia."
+    cta_button: "Vedi Tutte le Cantine"
+  vini:
+    torna: "Torna ai vini"
+    servire_a: "Servire a"
+    note_title: "Note di Degustazione"
+    note_vista: "Vista"
+    note_olfatto: "Olfatto"
+    note_gusto: "Gusto"
+    abbinamenti_title: "Abbinamenti Consigliati"
+    altri_di: "Altri vini di"
+    cta_title: "Scopri Altri Vini d'Abruzzo"
+    cta_text: "Esplora la nostra selezione completa di vini iconici della regione"
+    cta_button: "Vedi tutti i vini"
+  blog:
+    torna: "Torna al Blog"
+    correlati: "Articoli Correlati"
+    autore_bio: "La redazione di Abruzzo diVino racconta vini, cantine e territorio della regione, con articoli dedicati alla tradizione enologica abruzzese e alle sue eccellenze."
+    band_title: "Non Perdere i Nostri Articoli"
+    band_text: "Storie, guide e approfondimenti sul vino abruzzese, pubblicati con regolarità. Continua a seguirci per non perdere i prossimi articoli."
+  eventi:
+    band_title: "Non Perdere i Prossimi Eventi"
+    band_text: "Degustazioni esclusive, masterclass e workshop enologici nel cuore dell'Abruzzo. Continua a seguirci per scoprire le prossime date."
+  territorio:
+    chiavi_title: "Le Chiavi del Successo"
+    zone_title: "Le Zone Vinicole d'Eccellenza"
+    sapori_title: "I Sapori dell'Abruzzo"
+  sapori:
+    torna: "Torna ai Sapori"
+    empty_title: "Sezione in arrivo"
+    empty_text: "Stiamo preparando racconti e approfondimenti sui sapori della tradizione abruzzese: arrosticini, pecorino, ventricina, brodetto e molto altro. Torna presto a trovarci."

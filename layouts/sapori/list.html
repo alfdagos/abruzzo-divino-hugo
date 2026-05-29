@@ -1,0 +1,52 @@
+{{ define "main" }}
+
+{{- $L := hugo.Data.ui.labels -}}
+
+{{/* Hero */}}
+<section class="pt-32 pb-16 bg-gradient-to-b from-wine to-wine-dark text-cream">
+  <div class="container mx-auto px-4 text-center">
+    <h1 class="font-playfair text-5xl md:text-6xl font-bold mb-6 animate-fade-in">{{ .Title }}</h1>
+    <p class="text-xl md:text-2xl text-cream/90 max-w-3xl mx-auto animate-fade-in-up">{{ .Description }}</p>
+  </div>
+</section>
+
+{{/* Griglia sapori (popolata in futuro dall'agente AI — DECISIONS #8) */}}
+<section class="py-16 bg-cream">
+  <div class="container mx-auto px-4">
+    {{ with .Pages }}
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {{ range .ByDate.Reverse }}
+          {{- $cover := partial "func/cover.html" . -}}
+          <article class="h-full overflow-hidden rounded-lg bg-card shadow-md hover-lift group flex flex-col">
+            <a href="{{ .RelPermalink }}" class="block aspect-[16/9] bg-gradient-to-br from-wine/10 to-wine/5 overflow-hidden">
+              {{- with $cover -}}
+                {{- $img := .Resize "640x webp q80" -}}
+                <img src="{{ $img.RelPermalink }}" alt="{{ $.Title }}" loading="lazy"
+                     width="{{ $img.Width }}" height="{{ $img.Height }}"
+                     class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+              {{- end -}}
+            </a>
+            <div class="p-6 flex flex-col flex-1">
+              <h2 class="font-playfair text-xl font-bold text-wine mb-3 group-hover:text-wine-dark transition-colors">
+                <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+              </h2>
+              <p class="text-sm text-muted-foreground mb-4 line-clamp-3">{{ .Summary | plainify }}</p>
+              <a href="{{ .RelPermalink }}" class="mt-auto inline-flex items-center text-gold font-semibold text-sm group-hover:translate-x-2 transition-transform">
+                {{ $L.scopri_di_piu }}
+                <span class="ml-2 inline-flex">{{ partial "icons/arrow-right.html" . }}</span>
+              </a>
+            </div>
+          </article>
+        {{ end }}
+      </div>
+    {{ else }}
+      <div class="max-w-2xl mx-auto text-center py-12">
+        <div class="text-gold mx-auto mb-6 inline-flex">{{ partial "icons/grape.html" . }}</div>
+        <h2 class="font-playfair text-3xl font-bold text-wine mb-4">{{ $L.sapori.empty_title }}</h2>
+        <p class="text-lg text-muted-foreground">{{ $L.sapori.empty_text }}</p>
+      </div>
+    {{ end }}
+  </div>
+</section>
+
+{{ end }}

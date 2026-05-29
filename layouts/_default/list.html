@@ -1,0 +1,27 @@
+{{/* Stub list template — Step 4 lo sostituisce con liste pixel-perfect per
+     cantine/, vini/, blog/, eventi/, sapori/. Per ora elenco minimo. */}}
+{{ define "main" }}
+<section class="pt-32 pb-16 bg-gradient-to-b from-wine to-wine-dark text-cream">
+  <div class="container mx-auto px-4 text-center">
+    <h1 class="font-playfair text-5xl md:text-6xl font-bold mb-6 animate-fade-in">{{ .Title }}</h1>
+    {{ with .Description }}<p class="text-xl text-cream/90 max-w-3xl mx-auto">{{ . }}</p>{{ end }}
+  </div>
+</section>
+
+<section class="py-16 bg-cream">
+  <div class="container mx-auto px-4">
+    <ul class="max-w-3xl mx-auto space-y-4">
+      {{ range .Pages.ByWeight }}
+        <li>
+          <a href="{{ .RelPermalink }}" class="block bg-card rounded-md p-6 shadow hover-lift">
+            <h2 class="font-playfair text-2xl font-bold text-wine">{{ .Title }}</h2>
+            {{ with .Params.descrizione }}<p class="text-muted-foreground mt-2">{{ . }}</p>{{ end }}
+          </a>
+        </li>
+      {{ else }}
+        <li class="text-muted-foreground text-center">Nessun contenuto in questa sezione.</li>
+      {{ end }}
+    </ul>
+  </div>
+</section>
+{{ end }}

@@ -1,0 +1,13 @@
+{{/* Stub single template — Step 4 sostituisce con CantinaDetail/ViniDetail/etc.
+     pixel-perfect. Per ora rendering minimo del body markdown. */}}
+{{ define "main" }}
+<article class="pt-32 pb-16">
+  <div class="container mx-auto px-4 max-w-3xl">
+    <h1 class="font-playfair text-4xl md:text-5xl font-bold text-wine mb-6">{{ .Title }}</h1>
+    {{ with .Params.descrizione }}<p class="text-lg text-muted-foreground mb-8">{{ . }}</p>{{ end }}
+    <div class="prose prose-lg max-w-none">
+      {{ .Content }}
+    </div>
+  </div>
+</article>
+{{ end }}

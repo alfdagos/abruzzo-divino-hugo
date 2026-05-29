@@ -1,0 +1,52 @@
+# =============================================================================
+# Abruzzo diVino — Hugo (extended) + Tailwind/PostCSS + Sveltia CMS
+# =============================================================================
+
+# --- Hugo: output e cache di build ------------------------------------------
+/public/
+/resources/_gen/
+/.hugo_build.lock
+hugo_stats.json
+.hugo_cache/
+# Server di sviluppo (file temporanei)
+*.hugo_build.lock
+
+# --- Node / npm (Tailwind, PostCSS, autoprefixer) ----------------------------
+/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+# NB: package-lock.json VA committato (serve a `npm ci` nella GitHub Action)
+
+# --- Variabili d'ambiente / segreti ------------------------------------------
+.env
+.env.*
+!.env.example
+*.pem
+
+# --- Sveltia CMS -------------------------------------------------------------
+# L'editing in locale (local_backend) scrive direttamente nei file del repo:
+# nessun artefatto da ignorare. Eventuale cache del proxy:
+.sveltia/
+
+# --- Sistema operativo -------------------------------------------------------
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# --- Editor / IDE ------------------------------------------------------------
+.vscode/
+.idea/
+*.swp
+*~
+*.tmp
+
+# --- Log generici ------------------------------------------------------------
+*.log
